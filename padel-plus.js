@@ -16,22 +16,52 @@
     class PadelPlus {
         constructor() {
             this.isInitialized = false;
+            this.lenis = null;
             this.init();
         }
         
-        init() {
+        async init() {
             if (this.isInitialized) return;
-            
             this.log('Padel Plus initializing...');
-            
+            // Load Lenis CSS and JS, then initialize
+            await this.loadLenisResources();
+            this.initLenis();
             // Wait for DOM to be ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', () => this.setup());
             } else {
                 this.setup();
             }
-            
             this.isInitialized = true;
+        }
+        
+        async loadLenisResources() {
+            // Load Lenis CSS
+            if (!document.querySelector('link[data-lenis]')) {
+                const lenisCss = document.createElement('link');
+                lenisCss.rel = 'stylesheet';
+                lenisCss.href = 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css';
+                lenisCss.setAttribute('data-lenis', 'true');
+                document.head.appendChild(lenisCss);
+            }
+            // Load Lenis JS
+            if (!window.Lenis) {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.min.js';
+                    script.async = true;
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+            }
+        }
+        
+        initLenis() {
+            if (window.Lenis && !this.lenis) {
+                this.lenis = new window.Lenis({ autoRaf: true });
+                this.log('Lenis smooth scroll initialized');
+            }
         }
         
         setup() {
@@ -189,6 +219,17 @@
             button.textContent = text;
             button.addEventListener('click', onClick);
             return button;
+        }
+        
+        // Utility methods for Lenis
+        pauseScroll() {
+            if (this.lenis) this.lenis.stop();
+        }
+        resumeScroll() {
+            if (this.lenis) this.lenis.start();
+        }
+        getLenisInstance() {
+            return this.lenis;
         }
     }
     

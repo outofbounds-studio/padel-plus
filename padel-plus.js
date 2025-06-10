@@ -25,6 +25,8 @@
             this.log('Padel Plus initializing...');
             // Load Lenis CSS and JS, then initialize
             await this.loadLenisResources();
+            // Load GSAP and ScrollTrigger
+            await this.loadGsapResources();
             this.initLenis();
             // Wait for DOM to be ready
             if (document.readyState === 'loading') {
@@ -57,6 +59,35 @@
             }
         }
         
+        async loadGsapResources() {
+            // Load GSAP
+            if (!window.gsap) {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js';
+                    script.async = true;
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+            }
+            // Load ScrollTrigger
+            if (!window.ScrollTrigger) {
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js';
+                    script.async = true;
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+            }
+            // Register plugin
+            if (window.gsap && window.ScrollTrigger) {
+                window.gsap.registerPlugin(window.ScrollTrigger);
+            }
+        }
+        
         initLenis() {
             if (window.Lenis && !this.lenis) {
                 this.lenis = new window.Lenis({ autoRaf: true });
@@ -75,6 +106,9 @@
             
             // Listen for Webflow events
             this.listenForWebflowEvents();
+            
+            // Run GSAP/ScrollTrigger/Lenis animation logic
+            this.initGsapScrollAnimations();
             
             this.log('Padel Plus setup complete!');
         }
@@ -230,6 +264,56 @@
         }
         getLenisInstance() {
             return this.lenis;
+        }
+        
+        initGsapScrollAnimations() {
+            // Ensure GSAP and ScrollTrigger are loaded
+            if (!window.gsap || !window.ScrollTrigger) return;
+            // Use the existing Lenis instance if available
+            const lenis = this.lenis || (window.Lenis ? new window.Lenis({ autoRaf: true }) : null);
+            // Animation logic
+            window.addEventListener('DOMContentLoaded', () => {
+                // Hide .scroll when .mwg_effect031 is at the top
+                window.gsap.to('.scroll', {
+                    autoAlpha: 0,
+                    duration: 0.2,
+                    scrollTrigger: {
+                        trigger: '.mwg_effect031',
+                        start: 'top top',
+                        end: 'top top-=1',
+                        toggleActions: 'play none reverse none'
+                    }
+                });
+                const slides = document.querySelectorAll('.mwg_effect031 .slide');
+                slides.forEach(slide => {
+                    const contentWrapper = slide.querySelector('.content-wrapper');
+                    const content = slide.querySelector('.content');
+                    if (!contentWrapper || !content) return;
+                    window.gsap.to(content, {
+                        rotationZ: (Math.random() - 0.5) * 10,
+                        scale: 0.7,
+                        rotationX: 40,
+                        ease: 'power1.in',
+                        scrollTrigger: {
+                            pin: contentWrapper,
+                            trigger: slide,
+                            start: 'top 0%',
+                            end: '+=' + window.innerHeight,
+                            scrub: true
+                        }
+                    });
+                    window.gsap.to(content, {
+                        autoAlpha: 0,
+                        ease: 'power1.in',
+                        scrollTrigger: {
+                            trigger: content,
+                            start: 'top -80%',
+                            end: '+=' + 0.2 * window.innerHeight,
+                            scrub: true
+                        }
+                    });
+                });
+            });
         }
     }
     

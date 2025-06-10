@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padel Plus - Development Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #555;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .status {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            border-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏓 Padel Plus Development Test</h1>
+    
+    <div class="test-section">
+        <h2>Script Loading Test</h2>
+        <p>Check if the Padel Plus script is loaded correctly:</p>
+        <div id="script-status" class="status">
+            Checking script status...
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Modal Test</h2>
+        <p>Test the modal functionality:</p>
+        <div class="button-group">
+            <button onclick="testModal()">Show Test Modal</button>
+            <button onclick="testCustomModal()">Show Custom Modal</button>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Button Creation Test</h2>
+        <p>Test creating custom buttons:</p>
+        <div class="button-group">
+            <button onclick="createTestButton()">Create Test Button</button>
+        </div>
+        <div id="button-container"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Webflow Simulation</h2>
+        <p>Simulate Webflow environment:</p>
+        <div class="button-group">
+            <button onclick="simulateWebflow()">Simulate Webflow Load</button>
+            <button onclick="simulateFormSubmit()">Simulate Form Submit</button>
+        </div>
+    </div>
+
+    <!-- Load the Padel Plus script -->
+    <script src="padel-plus.js"></script>
+    
+    <script>
+        // Test functions
+        function testModal() {
+            if (window.PadelPlus) {
+                window.PadelPlus.showModal(
+                    'Test Modal', 
+                    '<p>This is a test modal from Padel Plus!</p><p>You can close it by clicking the X or clicking outside.</p>'
+                );
+            } else {
+                alert('Padel Plus not loaded!');
+            }
+        }
+        
+        function testCustomModal() {
+            if (window.PadelPlus) {
+                window.PadelPlus.showModal(
+                    'Custom Content', 
+                    '<h3>Custom Modal</h3><p>This modal can contain any HTML content.</p><ul><li>Feature 1</li><li>Feature 2</li><li>Feature 3</li></ul>'
+                );
+            }
+        }
+        
+        function createTestButton() {
+            if (window.PadelPlus) {
+                const button = window.PadelPlus.createButton('Dynamic Button', () => {
+                    alert('Dynamic button clicked!');
+                });
+                document.getElementById('button-container').appendChild(button);
+            }
+        }
+        
+        function simulateWebflow() {
+            // Simulate Webflow environment
+            if (!window.Webflow) {
+                window.Webflow = {
+                    push: function(callback) {
+                        console.log('Simulating Webflow page load...');
+                        setTimeout(callback, 100);
+                    }
+                };
+            }
+            
+            // Trigger Webflow event
+            window.Webflow.push(() => {
+                console.log('Webflow page loaded (simulated)');
+            });
+        }
+        
+        function simulateFormSubmit() {
+            // Create a fake form and submit it
+            const form = document.createElement('form');
+            form.setAttribute('data-wf-form', 'test');
+            form.innerHTML = '<input type="text" value="test"><button type="submit">Submit</button>';
+            
+            document.body.appendChild(form);
+            form.dispatchEvent(new Event('submit'));
+            document.body.removeChild(form);
+        }
+        
+        // Check script loading status
+        setTimeout(() => {
+            const statusDiv = document.getElementById('script-status');
+            if (window.PadelPlus) {
+                statusDiv.innerHTML = '✅ Padel Plus loaded successfully! Version: ' + (window.PadelPlus.version || '1.0.0');
+                statusDiv.className = 'status';
+            } else {
+                statusDiv.innerHTML = '❌ Padel Plus failed to load!';
+                statusDiv.className = 'status error';
+            }
+        }, 1000);
+        
+        // Enable debug mode for testing
+        if (window.PadelPlus) {
+            window.PadelPlus.log = function(message, data) {
+                console.log(`[Padel Plus] ${message}`, data);
+            };
+        }
+    </script>
+</body>
+</html> 

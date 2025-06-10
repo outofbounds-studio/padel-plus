@@ -1,0 +1,204 @@
+/**
+ * Padel Plus - Webflow Integration
+ * A simple JavaScript library for Padel Plus functionality
+ */
+
+(function() {
+    'use strict';
+    
+    // Configuration
+    const CONFIG = {
+        version: '1.0.0',
+        debug: false
+    };
+    
+    // Main PadelPlus class
+    class PadelPlus {
+        constructor() {
+            this.isInitialized = false;
+            this.init();
+        }
+        
+        init() {
+            if (this.isInitialized) return;
+            
+            this.log('Padel Plus initializing...');
+            
+            // Wait for DOM to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => this.setup());
+            } else {
+                this.setup();
+            }
+            
+            this.isInitialized = true;
+        }
+        
+        setup() {
+            this.log('Setting up Padel Plus...');
+            
+            // Add CSS styles
+            this.addStyles();
+            
+            // Initialize components
+            this.initComponents();
+            
+            // Listen for Webflow events
+            this.listenForWebflowEvents();
+            
+            this.log('Padel Plus setup complete!');
+        }
+        
+        addStyles() {
+            const styles = `
+                .padel-plus-container {
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
+                
+                .padel-plus-button {
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                }
+                
+                .padel-plus-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+                }
+                
+                .padel-plus-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.5);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10000;
+                }
+                
+                .padel-plus-modal-content {
+                    background: white;
+                    padding: 30px;
+                    border-radius: 12px;
+                    max-width: 500px;
+                    width: 90%;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                }
+                
+                .padel-plus-modal h2 {
+                    margin-top: 0;
+                    color: #333;
+                }
+                
+                .padel-plus-close {
+                    position: absolute;
+                    top: 15px;
+                    right: 20px;
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #666;
+                }
+            `;
+            
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = styles;
+            document.head.appendChild(styleSheet);
+        }
+        
+        initComponents() {
+            // Initialize any components here
+            this.log('Components initialized');
+        }
+        
+        listenForWebflowEvents() {
+            // Listen for Webflow page transitions
+            if (window.Webflow) {
+                window.Webflow.push(() => {
+                    this.log('Webflow page loaded');
+                    this.onPageLoad();
+                });
+            }
+            
+            // Listen for Webflow form submissions
+            document.addEventListener('submit', (e) => {
+                if (e.target.closest('[data-wf-form]')) {
+                    this.log('Webflow form submitted');
+                    this.onFormSubmit(e);
+                }
+            });
+        }
+        
+        onPageLoad() {
+            // Handle page load events
+            this.log('Page loaded - Padel Plus ready');
+        }
+        
+        onFormSubmit(event) {
+            // Handle form submissions
+            this.log('Form submitted:', event.target);
+        }
+        
+        // Utility methods
+        log(message, data = null) {
+            if (CONFIG.debug) {
+                console.log(`[Padel Plus] ${message}`, data);
+            }
+        }
+        
+        // Public API methods
+        showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'padel-plus-modal';
+            modal.innerHTML = `
+                <div class="padel-plus-modal-content">
+                    <button class="padel-plus-close">&times;</button>
+                    <h2>${title}</h2>
+                    <div>${content}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.style.display = 'flex';
+            
+            // Close functionality
+            modal.querySelector('.padel-plus-close').addEventListener('click', () => {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+        
+        createButton(text, onClick) {
+            const button = document.createElement('button');
+            button.className = 'padel-plus-button';
+            button.textContent = text;
+            button.addEventListener('click', onClick);
+            return button;
+        }
+    }
+    
+    // Initialize Padel Plus when script loads
+    const padelPlus = new PadelPlus();
+    
+    // Expose to global scope for external access
+    window.PadelPlus = padelPlus;
+    
+    // Log initialization
+    console.log('Padel Plus v' + CONFIG.version + ' loaded successfully!');
+    
+})(); 

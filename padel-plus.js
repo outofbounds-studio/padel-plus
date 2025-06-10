@@ -273,6 +273,7 @@
             const lenis = this.lenis || (window.Lenis ? new window.Lenis({ autoRaf: true }) : null);
             // Animation logic
             window.addEventListener('DOMContentLoaded', () => {
+                console.log('[Padel Plus] GSAP/ScrollTrigger animation logic running');
                 // Hide .scroll when .mwg_effect031 is at the top
                 window.gsap.to('.scroll', {
                     autoAlpha: 0,

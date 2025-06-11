@@ -1,6 +1,5 @@
 /**
- * Padel Plus - Webflow Integration
- * A simple JavaScript library for Padel Plus functionality
+ * Padel Plus - Main JS
  */
 
 (function() {

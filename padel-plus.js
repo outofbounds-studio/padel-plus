@@ -44,7 +44,7 @@ Promise.all([
   console.log('Lenis loaded:', !!window.Lenis);
   gsap.registerPlugin(ScrollTrigger);
 
-  window.addEventListener("DOMContentLoaded", () => {
+  function runPadelPlusAnimationLogic() {
     console.log('[Padel Plus] DOMContentLoaded, running animation logic');
     // LENIS SMOOTH SCROLL (OPTIONAL)
     window.lenis = new Lenis({
@@ -94,7 +94,14 @@ Promise.all([
       });
     });
     console.log('[Padel Plus] Slide animations set up');
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', runPadelPlusAnimationLogic);
+  } else {
+    runPadelPlusAnimationLogic();
+  }
+
 }).catch((e) => {
   console.error('[Padel Plus] Error loading dependencies:', e);
 });

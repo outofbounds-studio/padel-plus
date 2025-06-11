@@ -5,6 +5,8 @@
 (function() {
     'use strict';
     
+    console.log('[Padel Plus] Script loaded (top of file)');
+    
     // Configuration
     const CONFIG = {
         version: '1.0.0',
@@ -38,14 +40,23 @@
         
         async loadLenisResources() {
             // Load Lenis CSS
+            await this.loadLenisCSS();
+            // Load Lenis JS
+            await this.loadLenisJS();
+        }
+        
+        async loadLenisCSS() {
             if (!document.querySelector('link[data-lenis]')) {
                 const lenisCss = document.createElement('link');
                 lenisCss.rel = 'stylesheet';
                 lenisCss.href = 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css';
                 lenisCss.setAttribute('data-lenis', 'true');
                 document.head.appendChild(lenisCss);
+                console.log('[Padel Plus] Lenis CSS loaded');
             }
-            // Load Lenis JS
+        }
+        
+        async loadLenisJS() {
             if (!window.Lenis) {
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script');
@@ -60,6 +71,16 @@
         
         async loadGsapResources() {
             // Load GSAP
+            await this.loadGSAP();
+            // Load ScrollTrigger
+            await this.loadScrollTrigger();
+            // Register plugin
+            if (window.gsap && window.ScrollTrigger) {
+                window.gsap.registerPlugin(window.ScrollTrigger);
+            }
+        }
+        
+        async loadGSAP() {
             if (!window.gsap) {
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script');
@@ -70,7 +91,9 @@
                     document.head.appendChild(script);
                 });
             }
-            // Load ScrollTrigger
+        }
+        
+        async loadScrollTrigger() {
             if (!window.ScrollTrigger) {
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script');
@@ -80,10 +103,6 @@
                     script.onerror = reject;
                     document.head.appendChild(script);
                 });
-            }
-            // Register plugin
-            if (window.gsap && window.ScrollTrigger) {
-                window.gsap.registerPlugin(window.ScrollTrigger);
             }
         }
         

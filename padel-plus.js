@@ -3,6 +3,102 @@
  * 
  */
 
+console.log('[Padel Plus] Script loaded (top of file)');
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) {
+      console.log(`[Padel Plus] Script already present: ${src}`);
+      return resolve();
+    }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => { console.log(`[Padel Plus] Loaded script: ${src}`); resolve(); };
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+function loadLenisCSS() {
+  if (!document.querySelector('link[data-lenis]')) {
+    const lenisCss = document.createElement('link');
+    lenisCss.rel = 'stylesheet';
+    lenisCss.href = 'https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.css';
+    lenisCss.setAttribute('data-lenis', 'true');
+    document.head.appendChild(lenisCss);
+    console.log('[Padel Plus] Lenis CSS loaded');
+  }
+}
+
+console.log('[Padel Plus] Before Promise.all for dependencies');
+
+Promise.all([
+  loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js'),
+  loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'),
+  loadScript('https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.min.js')
+]).then(() => {
+  loadLenisCSS();
+  console.log('[Padel Plus] All dependencies loaded (inside .then)');
+  console.log('GSAP loaded:', !!window.gsap);
+  console.log('ScrollTrigger loaded:', !!window.ScrollTrigger);
+  console.log('Lenis loaded:', !!window.Lenis);
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener("DOMContentLoaded", () => {
+    console.log('[Padel Plus] DOMContentLoaded, running animation logic');
+    // LENIS SMOOTH SCROLL (OPTIONAL)
+    window.lenis = new Lenis({
+      autoRaf: true,
+    });
+    console.log('[Padel Plus] Lenis instance created:', window.lenis);
+
+    gsap.to('.scroll', {
+      autoAlpha:0,
+      duration:0.2,
+      scrollTrigger: {
+        trigger:'.mwg_effect031',
+        start:'top top',
+        end:'top top-=1',
+        toggleActions: "play none reverse none"
+      }
+    });
+    console.log('[Padel Plus] .scroll animation set up');
+
+    const slides = document.querySelectorAll('.mwg_effect031 .slide');
+    slides.forEach(slide => {
+      const contentWrapper = slide.querySelector('.content-wrapper');
+      const content = slide.querySelector('.content');
+      if (!contentWrapper || !content) return;
+      gsap.to(content, {
+        rotationZ: (Math.random() - 0.5) * 10,
+        scale: 0.7,
+        rotationX: 40,
+        ease: 'power1.in',
+        scrollTrigger: {
+          pin: contentWrapper,
+          trigger: slide,
+          start: 'top 0%',
+          end: '+=' + window.innerHeight,
+          scrub: true
+        }
+      });
+      gsap.to(content, {
+        autoAlpha: 0,
+        ease: 'power1.in',
+        scrollTrigger: {
+          trigger: content,
+          start: 'top -80%',
+          end: '+=' + 0.2 * window.innerHeight,
+          scrub: true
+        }
+      });
+    });
+    console.log('[Padel Plus] Slide animations set up');
+  });
+}).catch((e) => {
+  console.error('[Padel Plus] Error loading dependencies:', e);
+});
+
 (function() {
     'use strict';
     

@@ -161,12 +161,17 @@ Promise.all([
       });
     });
     function setActiveSlideLink(activeId) {
+      console.log('[Padel Plus] setActiveSlideLink called with activeId:', activeId);
       document.querySelectorAll('.product-list-item').forEach(link => {
         const target = link.getAttribute('data-anchor-target');
+        const normalizedTarget = target ? target.replace(/^#/, '').trim().toLowerCase() : '';
+        const normalizedActiveId = activeId.trim().toLowerCase();
+        console.log('[Padel Plus] Comparing:', normalizedTarget, 'vs', normalizedActiveId, 'for link:', link);
         if (
           target &&
-          target.replace(/^#/, '').trim().toLowerCase() === activeId.trim().toLowerCase()
+          normalizedTarget === normalizedActiveId
         ) {
+          console.log('[Padel Plus] Match found. Setting opacity 1 for link:', link);
           link.style.opacity = "1";
         } else {
           link.style.opacity = "0.3";

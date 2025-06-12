@@ -52,6 +52,24 @@ Promise.all([
     });
     console.log('[Padel Plus] Lenis instance created:', window.lenis);
 
+    // Scroll-To Anchor Lenis
+    function initScrollToAnchorLenis() {
+      document.querySelectorAll('[data-anchor-target]').forEach(element => {
+        element.addEventListener('click', function () {
+          const targetScrollToAnchorLenis = this.getAttribute('data-anchor-target');
+          if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+            window.lenis.scrollTo(targetScrollToAnchorLenis, {
+              easing: (x) => (x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2),
+              duration: 1.2,
+              offset: 0 // Option to create an offset when there is a fixed navigation for example
+            });
+          }
+        });
+      });
+    }
+    // Initialize Scroll-To Anchor Lenis
+    initScrollToAnchorLenis();
+
     gsap.to('.scroll', {
       autoAlpha:0,
       duration:0.2,

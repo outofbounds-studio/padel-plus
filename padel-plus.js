@@ -163,7 +163,10 @@ Promise.all([
     function setActiveSlideLink(activeId) {
       document.querySelectorAll('.product-list-item').forEach(link => {
         const target = link.getAttribute('data-anchor-target');
-        if (target === `#${activeId}`) {
+        if (
+          target &&
+          target.replace(/^#/, '').trim().toLowerCase() === activeId.trim().toLowerCase()
+        ) {
           link.style.opacity = "1";
         } else {
           link.style.opacity = "0.3";

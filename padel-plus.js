@@ -147,6 +147,29 @@ Promise.all([
     window.onpageshow = function (event) {
       if (event.persisted) window.location.reload();
     };
+
+    // Highlight active slide link
+    document.querySelectorAll('.slide').forEach(slide => {
+      const slideId = slide.id;
+      if (!slideId) return;
+      ScrollTrigger.create({
+        trigger: slide,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => setActiveSlideLink(slideId),
+        onEnterBack: () => setActiveSlideLink(slideId)
+      });
+    });
+    function setActiveSlideLink(activeId) {
+      document.querySelectorAll('.product-list-item').forEach(link => {
+        const target = link.getAttribute('data-anchor-target');
+        if (target === `#${activeId}`) {
+          link.style.opacity = "1";
+        } else {
+          link.style.opacity = "0.3";
+        }
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

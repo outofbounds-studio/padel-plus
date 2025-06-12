@@ -185,16 +185,22 @@ Promise.all([
       const canopiesLink = document.querySelector('.canopies-link');
       if (!courtsLink || !canopiesLink) return;
 
+      // Remove .active from both, then add to the active one
+      courtsLink.classList.remove('active');
+      canopiesLink.classList.remove('active');
+
       if (category === 'courts') {
         courtsLink.style.opacity = '1';
         canopiesLink.style.opacity = '0.3';
-        courtsLink.innerHTML = '<span class="plus">+</span> Courts';
-        canopiesLink.innerHTML = 'Canopies';
+        courtsLink.classList.add('active');
+        console.log('[Padel Plus] Courts active: plus symbol animated in, opacity 1');
+        console.log('[Padel Plus] Canopies inactive: opacity 0.3');
       } else if (category === 'canopies') {
         courtsLink.style.opacity = '0.3';
         canopiesLink.style.opacity = '1';
-        courtsLink.innerHTML = 'Courts';
-        canopiesLink.innerHTML = '<span class="plus">+</span> Canopies';
+        canopiesLink.classList.add('active');
+        console.log('[Padel Plus] Canopies active: plus symbol animated in, opacity 1');
+        console.log('[Padel Plus] Courts inactive: opacity 0.3');
       }
     }
 

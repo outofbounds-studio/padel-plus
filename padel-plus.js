@@ -94,6 +94,36 @@ Promise.all([
       });
     });
     console.log('[Padel Plus] Slide animations set up');
+
+    // PAGE TRANSITION ANIMATION (vanilla JS)
+    console.log('[Padel Plus] Setting up page transitions');
+    // Page load transition
+    let tl = gsap.timeline();
+    tl.to(".transition_column", {yPercent: -100, stagger: 0.2});
+    tl.set(".transition_wrap", {display: "none"});
+
+    // Link click transition
+    document.querySelectorAll('a:not(.excluded-class)')?.forEach(link => {
+      link.addEventListener('click', function(e) {
+        let currentUrl = link.getAttribute('href');
+        if (
+          link.hostname === window.location.host &&
+          currentUrl && !currentUrl.includes("#") &&
+          link.target !== "_blank"
+        ) {
+          e.preventDefault();
+          // window.lenis && window.lenis.stop && window.lenis.stop();
+          let tl = gsap.timeline({ onComplete: () => (window.location.href = currentUrl) });
+          tl.set(".transition_wrap", {display: "flex"});
+          tl.fromTo(".transition_column", {yPercent: 100}, {yPercent: 0, stagger: 0.2});
+        }
+      });
+    });
+
+    // On Back Button Tap
+    window.onpageshow = function (event) {
+      if (event.persisted) window.location.reload();
+    };
   }
 
   if (document.readyState === 'loading') {

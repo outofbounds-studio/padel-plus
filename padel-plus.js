@@ -178,6 +178,46 @@ Promise.all([
         }
       });
     }
+
+    // --- CATEGORY LINK HIGHLIGHTING ---
+    function setActiveCategory(category) {
+      const courtsLink = document.querySelector('.courts-link');
+      const canopiesLink = document.querySelector('.canopies-link');
+      if (!courtsLink || !canopiesLink) return;
+
+      if (category === 'courts') {
+        courtsLink.style.opacity = '1';
+        canopiesLink.style.opacity = '0.3';
+        courtsLink.innerHTML = '<span class="plus">+</span> Courts';
+        canopiesLink.innerHTML = 'Canopies';
+      } else if (category === 'canopies') {
+        courtsLink.style.opacity = '0.3';
+        canopiesLink.style.opacity = '1';
+        courtsLink.innerHTML = 'Courts';
+        canopiesLink.innerHTML = '<span class="plus">+</span> Canopies';
+      }
+    }
+
+    // Courts slides
+    document.querySelectorAll('.slide[data-category="courts"]').forEach(slide => {
+      ScrollTrigger.create({
+        trigger: slide,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => setActiveCategory('courts'),
+        onEnterBack: () => setActiveCategory('courts')
+      });
+    });
+    // Canopies slides
+    document.querySelectorAll('.slide[data-category="canopies"]').forEach(slide => {
+      ScrollTrigger.create({
+        trigger: slide,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => setActiveCategory('canopies'),
+        onEnterBack: () => setActiveCategory('canopies')
+      });
+    });
   }
 
   if (document.readyState === 'loading') {

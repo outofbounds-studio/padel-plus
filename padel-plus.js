@@ -113,9 +113,14 @@ Promise.all([
         ) {
           e.preventDefault();
           // window.lenis && window.lenis.stop && window.lenis.stop();
-          let tl = gsap.timeline({ onComplete: () => (window.location.href = currentUrl) });
-          tl.set(".transition_wrap", {display: "flex"});
-          tl.fromTo(".transition_column", {yPercent: 100}, {yPercent: 0, stagger: 0.2});
+          gsap.set(".transition_wrap", {display: "flex"});
+          gsap.set(".transition_column", {yPercent: 100});
+          gsap.to(".transition_column", {
+            yPercent: 0,
+            stagger: 0.1,      // Faster stagger
+            duration: 0.4,     // Faster animation
+            onComplete: () => (window.location.href = currentUrl)
+          });
         }
       });
     });

@@ -224,6 +224,19 @@ Promise.all([
         onEnterBack: () => setActiveCategory('canopies')
       });
     });
+
+    // Smooth background color transition for .product-section
+    gsap.to('.product-section', {
+      backgroundColor: '#1a1a1a',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.product-section',
+        start: 'top 50%', // When section top reaches 50% up the screen
+        end: 'bottom 50%', // When section bottom reaches 50% up the screen
+        scrub: true, // Smooth animation that follows scroll
+        toggleActions: 'play none reverse none'
+      }
+    });
   }
 
   if (document.readyState === 'loading') {

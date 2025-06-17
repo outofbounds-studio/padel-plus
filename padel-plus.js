@@ -288,6 +288,30 @@ Promise.all([
         });
       });
     }
+
+    // Ensure button color is correct on page load (for hero/dark section at top)
+    function updateButtonColorOnLoad() {
+      const btnBg = document.querySelector('.button-color-tennis_bg');
+      const btnText = document.querySelector('.button-color-tennis_text');
+      if (!btnBg || !btnText) return;
+      const darkSections = document.querySelectorAll('[data-bg="dark"]');
+      let isOverDark = false;
+      darkSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 0 && rect.bottom > 0) {
+          isOverDark = true;
+        }
+      });
+      if (isOverDark) {
+        btnBg.classList.add('light');
+        btnText.classList.add('light');
+      } else {
+        btnBg.classList.remove('light');
+        btnText.classList.remove('light');
+      }
+    }
+    window.addEventListener('DOMContentLoaded', updateButtonColorOnLoad);
+    window.addEventListener('load', updateButtonColorOnLoad);
   }
 
   if (document.readyState === 'loading') {

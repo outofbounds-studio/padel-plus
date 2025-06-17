@@ -239,7 +239,7 @@ Promise.all([
       },
       onLeave: () => {
         gsap.to('body', {
-          backgroundColor: 'transparent',
+          backgroundColor: '#f9f9f9',
           duration: 0.3,
           ease: 'power2.out'
         });
@@ -253,7 +253,7 @@ Promise.all([
       },
       onLeaveBack: () => {
         gsap.to('body', {
-          backgroundColor: 'transparent',
+          backgroundColor: '#f9f9f9',
           duration: 0.3,
           ease: 'power2.out'
         });

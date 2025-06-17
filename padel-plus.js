@@ -228,12 +228,12 @@ Promise.all([
     // Smooth background color transition for .product-section
     gsap.to('.product-section', {
       backgroundColor: '#1a1a1a',
-      ease: 'none',
+      duration: 0.3,
+      ease: 'power2.out',
       scrollTrigger: {
-        trigger: '.product-section',
-        start: 'top 50%', // When section top reaches 50% up the screen
-        end: 'bottom 50%', // When section bottom reaches 50% up the screen
-        scrub: true, // Smooth animation that follows scroll
+        trigger: '.mwg_effect031 .slide:first-child',
+        start: 'top top', // When first slide pins to top
+        end: 'bottom top',
         toggleActions: 'play none reverse none'
       }
     });

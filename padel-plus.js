@@ -226,15 +226,37 @@ Promise.all([
     });
 
     // Smooth background color transition for .product-section
-    gsap.to('.product-section', {
-      backgroundColor: '#1a1a1a',
-      duration: 0.3,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: '.mwg_effect031 .slide:first-child',
-        start: 'top top', // When first slide pins to top
-        end: 'top top-=1', // When first slide unpins (just 1px before)
-        toggleActions: 'play reverse reverse play'
+    ScrollTrigger.create({
+      trigger: '.mwg_effect031 .slide:first-child',
+      start: 'top top',
+      end: 'bottom top',
+      onEnter: () => {
+        gsap.to('.product-section', {
+          backgroundColor: '#1a1a1a',
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      },
+      onLeave: () => {
+        gsap.to('.product-section', {
+          backgroundColor: 'transparent',
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      },
+      onEnterBack: () => {
+        gsap.to('.product-section', {
+          backgroundColor: '#1a1a1a',
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      },
+      onLeaveBack: () => {
+        gsap.to('.product-section', {
+          backgroundColor: 'transparent',
+          duration: 0.3,
+          ease: 'power2.out'
+        });
       }
     });
   }

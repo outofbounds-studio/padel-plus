@@ -233,8 +233,8 @@ Promise.all([
       scrollTrigger: {
         trigger: '.mwg_effect031 .slide:first-child',
         start: 'top top', // When first slide pins to top
-        end: 'bottom top',
-        toggleActions: 'play none reverse none'
+        end: 'top top-=1', // When first slide unpins (just 1px before)
+        toggleActions: 'play reverse reverse play'
       }
     });
   }

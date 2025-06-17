@@ -315,8 +315,6 @@ Promise.all([
     }
     window.addEventListener('DOMContentLoaded', updateButtonColorOnLoad);
     window.addEventListener('load', updateButtonColorOnLoad);
-    window.addEventListener('scroll', updateButtonColorOnLoad);
-    window.addEventListener('resize', updateButtonColorOnLoad);
   }
 
   if (document.readyState === 'loading') {

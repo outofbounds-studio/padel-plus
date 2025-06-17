@@ -296,13 +296,22 @@ Promise.all([
       if (!btnBg || !btnText) return;
       const darkSections = document.querySelectorAll('[data-bg="dark"]');
       let isOverDark = false;
-      darkSections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        // Allow a small margin at the top (e.g., 50px)
-        if (rect.top < 50 && rect.bottom > 0) {
+
+      // If at the very top, check if the first section is dark
+      if (window.scrollY === 0) {
+        const firstSection = document.elementFromPoint(window.innerWidth / 2, 1);
+        if (firstSection && firstSection.closest('[data-bg="dark"]')) {
           isOverDark = true;
         }
-      });
+      } else {
+        darkSections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top < 50 && rect.bottom > 0) {
+            isOverDark = true;
+          }
+        });
+      }
+
       if (isOverDark) {
         btnBg.classList.add('light');
         btnText.classList.add('light');

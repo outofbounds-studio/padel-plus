@@ -229,7 +229,7 @@ Promise.all([
     ScrollTrigger.create({
       trigger: '.product-section',
       start: 'top top',
-      end: 'bottom 80%',
+      end: 'bottom 50%',
       onEnter: () => {
         gsap.to('body', {
           backgroundColor: '#1a1a1a',

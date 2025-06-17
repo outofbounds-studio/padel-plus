@@ -227,7 +227,7 @@ Promise.all([
 
     // Smooth background color transition for .product-section
     ScrollTrigger.create({
-      trigger: '.mwg_effect031 .slide:first-child',
+      trigger: '.product-section',
       start: 'top top',
       end: 'bottom top',
       onEnter: () => {

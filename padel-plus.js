@@ -225,34 +225,34 @@ Promise.all([
       });
     });
 
-    // Smooth background color transition for .product-section
+    // Smooth background color transition for body
     ScrollTrigger.create({
       trigger: '.product-section',
       start: 'top top',
       end: 'bottom top',
       onEnter: () => {
-        gsap.to('.product-section', {
+        gsap.to('body', {
           backgroundColor: '#1a1a1a',
           duration: 0.3,
           ease: 'power2.out'
         });
       },
       onLeave: () => {
-        gsap.to('.product-section', {
+        gsap.to('body', {
           backgroundColor: 'transparent',
           duration: 0.3,
           ease: 'power2.out'
         });
       },
       onEnterBack: () => {
-        gsap.to('.product-section', {
+        gsap.to('body', {
           backgroundColor: '#1a1a1a',
           duration: 0.3,
           ease: 'power2.out'
         });
       },
       onLeaveBack: () => {
-        gsap.to('.product-section', {
+        gsap.to('body', {
           backgroundColor: 'transparent',
           duration: 0.3,
           ease: 'power2.out'

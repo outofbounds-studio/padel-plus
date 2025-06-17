@@ -259,6 +259,35 @@ Promise.all([
         });
       }
     });
+
+    // Toggle nav button color based on section background
+    const btnBg = document.querySelector('.button-color-tennis_bg');
+    const btnText = document.querySelector('.button-color-tennis_text');
+    if (btnBg && btnText) {
+      document.querySelectorAll('[data-bg="dark"]').forEach(section => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          onEnter: () => {
+            btnBg.classList.add('light');
+            btnText.classList.add('light');
+          },
+          onEnterBack: () => {
+            btnBg.classList.add('light');
+            btnText.classList.add('light');
+          },
+          onLeave: () => {
+            btnBg.classList.remove('light');
+            btnText.classList.remove('light');
+          },
+          onLeaveBack: () => {
+            btnBg.classList.remove('light');
+            btnText.classList.remove('light');
+          }
+        });
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

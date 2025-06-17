@@ -229,7 +229,7 @@ Promise.all([
     ScrollTrigger.create({
       trigger: '.product-section',
       start: 'top top',
-      end: 'bottom top',
+      end: 'bottom 80%',
       onEnter: () => {
         gsap.to('body', {
           backgroundColor: '#1a1a1a',
@@ -240,7 +240,7 @@ Promise.all([
       onLeave: () => {
         gsap.to('body', {
           backgroundColor: '#f9f9f9',
-          duration: 0.3,
+          duration: 0.1,
           ease: 'power2.out'
         });
       },
@@ -254,7 +254,7 @@ Promise.all([
       onLeaveBack: () => {
         gsap.to('body', {
           backgroundColor: '#f9f9f9',
-          duration: 0.3,
+          duration: 0.1,
           ease: 'power2.out'
         });
       }

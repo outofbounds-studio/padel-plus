@@ -298,7 +298,8 @@ Promise.all([
       let isOverDark = false;
       darkSections.forEach(section => {
         const rect = section.getBoundingClientRect();
-        if (rect.top <= 0 && rect.bottom > 0) {
+        // Allow a small margin at the top (e.g., 50px)
+        if (rect.top < 50 && rect.bottom > 0) {
           isOverDark = true;
         }
       });

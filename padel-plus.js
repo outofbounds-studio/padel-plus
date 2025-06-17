@@ -297,13 +297,20 @@ Promise.all([
       const darkSections = document.querySelectorAll('[data-bg="dark"]');
       let isOverDark = false;
 
-      // Check if the top of the page is within a dark section (allowing for a 50px margin)
-      darkSections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top <= 50 && rect.bottom > 0) {
+      // If at the very top, check if the first section is dark
+      if (window.scrollY === 0) {
+        const firstSection = document.elementFromPoint(window.innerWidth / 2, 1);
+        if (firstSection && firstSection.closest('[data-bg="dark"]')) {
           isOverDark = true;
         }
-      });
+      } else {
+        darkSections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top < 50 && rect.bottom > 0) {
+            isOverDark = true;
+          }
+        });
+      }
 
       if (isOverDark) {
         btnBg.classList.add('light');
@@ -315,8 +322,6 @@ Promise.all([
     }
     window.addEventListener('DOMContentLoaded', updateButtonColorOnLoad);
     window.addEventListener('load', updateButtonColorOnLoad);
-    window.addEventListener('scroll', updateButtonColorOnLoad);
-    window.addEventListener('resize', updateButtonColorOnLoad);
   }
 
   if (document.readyState === 'loading') {

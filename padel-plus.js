@@ -314,6 +314,17 @@ Promise.all([
         setButtonColorManually();
       }
     });
+
+    // VimeoBG: Only run on homepage
+    console.log('[VimeoBG] Current pathname:', window.location.pathname);
+    if (
+      window.location.pathname === '/' ||
+      window.location.pathname === '/index.html' ||
+      window.location.pathname === '/home'
+    ) {
+      console.log('[VimeoBG] Forcing initVimeoBGVideo call (homepage)');
+      initVimeoBGVideo();
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -744,20 +755,5 @@ function initVimeoBGVideo() {
     }
     // Adjust video sizing on resize
     window.addEventListener('resize', adjustVideoSizing);
-  });
-}
-
-// Initialize Vimeo Background Video after dependencies are loaded
-if (typeof Vimeo !== 'undefined' && typeof Vimeo.Player !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('[VimeoBG] Current pathname:', window.location.pathname);
-    if (
-      window.location.pathname === '/' ||
-      window.location.pathname === '/index.html' ||
-      window.location.pathname === '/home'
-    ) {
-      console.log('[VimeoBG] Forcing initVimeoBGVideo call (homepage)');
-      initVimeoBGVideo();
-    }
   });
 } 

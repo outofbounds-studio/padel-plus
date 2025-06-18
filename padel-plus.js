@@ -306,6 +306,13 @@ Promise.all([
         setButtonColorManually();
       }, 100);
     });
+
+    // Ensure correct button color at the very top of the page
+    window.addEventListener('scroll', () => {
+      if (window.scrollY === 0) {
+        setButtonColorManually();
+      }
+    });
   }
 
   if (document.readyState === 'loading') {

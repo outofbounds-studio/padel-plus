@@ -276,6 +276,13 @@ Promise.all([
         });
       });
     }
+
+    // Force ScrollTrigger to refresh and update after everything is loaded
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        ScrollTrigger.refresh(true);
+      }, 50);
+    });
   }
 
   if (document.readyState === 'loading') {

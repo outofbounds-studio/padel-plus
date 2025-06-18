@@ -676,13 +676,14 @@ Promise.all([
 function initVimeoBGVideo() {
   // Select all elements that have [data-vimeo-bg-init]
   const vimeoPlayers = document.querySelectorAll('[data-vimeo-bg-init]');
+  console.log('[VimeoBG] Found elements:', vimeoPlayers.length);
 
   vimeoPlayers.forEach(function(vimeoElement, index) {
-    // Add Vimeo URL ID to the iframe [src]
-    // Looks like: https://player.vimeo.com/video/1019191082
     const vimeoVideoID = vimeoElement.getAttribute('data-vimeo-video-id');
+    console.log('[VimeoBG] Video ID:', vimeoVideoID);
     if (!vimeoVideoID) return;
     const vimeoVideoURL = `https://player.vimeo.com/video/${vimeoVideoID}?api=1&background=1&autoplay=1&loop=1&muted=1`;
+    console.log('[VimeoBG] Setting src:', vimeoVideoURL);
     vimeoElement.querySelector('iframe').setAttribute('src', vimeoVideoURL);
 
     // Assign an ID to each element
@@ -697,6 +698,7 @@ function initVimeoBGVideo() {
     player.on('bufferend', function() {
       vimeoElement.setAttribute('data-vimeo-activated', 'true');
       vimeoElement.setAttribute('data-vimeo-loaded', 'true');
+      console.log('[VimeoBG] Buffer end for:', iframeID);
     });
     
     // Update Aspect Ratio if [data-vimeo-update-size="true"]
@@ -708,6 +710,7 @@ function initVimeoBGVideo() {
           const beforeEl = vimeoElement.querySelector('.vimeo-bg__before');
           if (beforeEl) {
             beforeEl.style.paddingTop = videoAspectRatio * 100 + '%';
+            console.log('[VimeoBG] Set aspect ratio padding for', iframeID, ':', videoAspectRatio * 100 + '%');
           }
         });
       });

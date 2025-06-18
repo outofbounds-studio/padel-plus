@@ -265,23 +265,30 @@ Promise.all([
     const btnText = document.querySelector('.button-color-tennis_text');
     
     function updateButtonColorOnLoad() {
-      if (!btnBg || !btnText) return;
-      const darkSections = document.querySelectorAll('[data-bg="dark"]');
-      let isOverDark = false;
+      const btnBg = document.querySelector('.button-color-tennis_bg');
+      const btnText = document.querySelector('.button-color-tennis_text');
+      const btnWrap = document.querySelector('.contact-btn-wrap'); // outermost fixed wrapper
+      if (!btnBg || !btnText || !btnWrap) return;
 
-      // If at the very top, check if the first section is dark
-      if (window.scrollY === 0) {
-        const firstSection = document.elementFromPoint(window.innerWidth / 2, 1);
-        if (firstSection && firstSection.closest('[data-bg="dark"]')) {
-          isOverDark = true;
-        }
-      } else {
-        darkSections.forEach(section => {
-          const rect = section.getBoundingClientRect();
-          if (rect.top < 50 && rect.bottom > 0) {
-            isOverDark = true;
-          }
-        });
+      // Temporarily hide the button to detect what's underneath
+      btnWrap.style.pointerEvents = 'none';
+      btnWrap.style.visibility = 'hidden';
+
+      // Get the button's center position
+      const rect = btnWrap.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      // Find the element under the button
+      const elementUnder = document.elementFromPoint(x, y);
+
+      // Restore the button's visibility
+      btnWrap.style.pointerEvents = '';
+      btnWrap.style.visibility = '';
+
+      let isOverDark = false;
+      if (elementUnder && elementUnder.closest('[data-bg="dark"]')) {
+        isOverDark = true;
       }
 
       if (isOverDark) {

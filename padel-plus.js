@@ -263,36 +263,8 @@ Promise.all([
     // Toggle nav button color based on section background
     const btnBg = document.querySelector('.button-color-tennis_bg');
     const btnText = document.querySelector('.button-color-tennis_text');
-    if (btnBg && btnText) {
-      document.querySelectorAll('[data-bg="dark"]').forEach(section => {
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top top",
-          end: "bottom top",
-          onEnter: () => {
-            btnBg.classList.add('light');
-            btnText.classList.add('light');
-          },
-          onEnterBack: () => {
-            btnBg.classList.add('light');
-            btnText.classList.add('light');
-          },
-          onLeave: () => {
-            btnBg.classList.remove('light');
-            btnText.classList.remove('light');
-          },
-          onLeaveBack: () => {
-            btnBg.classList.remove('light');
-            btnText.classList.remove('light');
-          }
-        });
-      });
-    }
-
-    // Ensure button color is correct on page load (for hero/dark section at top)
+    
     function updateButtonColorOnLoad() {
-      const btnBg = document.querySelector('.button-color-tennis_bg');
-      const btnText = document.querySelector('.button-color-tennis_text');
       if (!btnBg || !btnText) return;
       const darkSections = document.querySelectorAll('[data-bg="dark"]');
       let isOverDark = false;
@@ -320,6 +292,38 @@ Promise.all([
         btnText.classList.remove('light');
       }
     }
+
+    // Run immediately
+    updateButtonColorOnLoad();
+
+    // Set up scroll triggers for each dark section
+    if (btnBg && btnText) {
+      document.querySelectorAll('[data-bg="dark"]').forEach(section => {
+        ScrollTrigger.create({
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          onEnter: () => {
+            btnBg.classList.add('light');
+            btnText.classList.add('light');
+          },
+          onEnterBack: () => {
+            btnBg.classList.add('light');
+            btnText.classList.add('light');
+          },
+          onLeave: () => {
+            btnBg.classList.remove('light');
+            btnText.classList.remove('light');
+          },
+          onLeaveBack: () => {
+            btnBg.classList.remove('light');
+            btnText.classList.remove('light');
+          }
+        });
+      });
+    }
+
+    // Also run on DOMContentLoaded and load events to ensure it catches all scenarios
     window.addEventListener('DOMContentLoaded', updateButtonColorOnLoad);
     window.addEventListener('load', updateButtonColorOnLoad);
   }

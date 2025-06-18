@@ -272,19 +272,22 @@ Promise.all([
 
       // Temporarily hide the button to detect what's underneath
       btnWrap.style.pointerEvents = 'none';
-      btnWrap.style.visibility = 'hidden';
+      btnWrap.style.opacity = '0';
 
       // Get the button's center position
       const rect = btnWrap.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
+      const x = Math.round(rect.left + rect.width / 2);
+      const y = Math.round(rect.top + rect.height / 2);
 
       // Find the element under the button
       const elementUnder = document.elementFromPoint(x, y);
 
       // Restore the button's visibility
       btnWrap.style.pointerEvents = '';
-      btnWrap.style.visibility = '';
+      btnWrap.style.opacity = '';
+
+      // Debug log
+      console.log('Element under button:', elementUnder);
 
       let isOverDark = false;
       if (elementUnder && elementUnder.closest('[data-bg="dark"]')) {

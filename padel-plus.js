@@ -750,7 +750,12 @@ function initVimeoBGVideo() {
 // Initialize Vimeo Background Video after dependencies are loaded
 if (typeof Vimeo !== 'undefined' && typeof Vimeo.Player !== 'undefined') {
   document.addEventListener('DOMContentLoaded', function() {
-    if (window.location.pathname === '/') {
+    console.log('[VimeoBG] Current pathname:', window.location.pathname);
+    if (
+      window.location.pathname === '/' ||
+      window.location.pathname === '/index.html' ||
+      window.location.pathname === '/home'
+    ) {
       console.log('[VimeoBG] Forcing initVimeoBGVideo call (homepage)');
       initVimeoBGVideo();
     }

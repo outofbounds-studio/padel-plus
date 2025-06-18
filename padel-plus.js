@@ -750,6 +750,9 @@ function initVimeoBGVideo() {
 // Initialize Vimeo Background Video after dependencies are loaded
 if (typeof Vimeo !== 'undefined' && typeof Vimeo.Player !== 'undefined') {
   document.addEventListener('DOMContentLoaded', function() {
-    initVimeoBGVideo();
+    if (window.location.pathname === '/') {
+      console.log('[VimeoBG] Forcing initVimeoBGVideo call (homepage)');
+      initVimeoBGVideo();
+    }
   });
 } 

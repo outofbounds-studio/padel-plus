@@ -276,15 +276,6 @@ Promise.all([
         });
       });
     }
-
-    // Also run on DOMContentLoaded and load events to ensure it catches all scenarios
-    window.addEventListener('DOMContentLoaded', updateButtonColorOnLoad);
-    window.addEventListener('load', updateButtonColorOnLoad);
-    // Also check after a short delay to catch late layout shifts
-    setTimeout(updateButtonColorOnLoad, 200);
-    // And on scroll/resize, in case layout changes after load
-    window.addEventListener('resize', updateButtonColorOnLoad);
-    window.addEventListener('scroll', updateButtonColorOnLoad);
   }
 
   if (document.readyState === 'loading') {

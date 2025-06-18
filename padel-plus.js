@@ -673,7 +673,10 @@ Promise.all([
 
 // --- Vimeo Background Video (Basic Version) ---
 // Source: https://www.osmo.supply/resource/vimeo-background-video
+console.log('[VimeoBG] Script loaded');
+
 function initVimeoBGVideo() {
+  console.log('[VimeoBG] initVimeoBGVideo called');
   // Select all elements that have [data-vimeo-bg-init]
   const vimeoPlayers = document.querySelectorAll('[data-vimeo-bg-init]');
   console.log('[VimeoBG] Found elements:', vimeoPlayers.length);

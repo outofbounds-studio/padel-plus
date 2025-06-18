@@ -260,74 +260,18 @@ Promise.all([
       }
     });
 
-    // Toggle nav button color based on section background
+    // Toggle nav button color based on section background using ScrollTrigger only
     const btnBg = document.querySelector('.button-color-tennis_bg');
     const btnText = document.querySelector('.button-color-tennis_text');
-    
-    function updateButtonColorOnLoad() {
-      const btnBg = document.querySelector('.button-color-tennis_bg');
-      const btnText = document.querySelector('.button-color-tennis_text');
-      const btnWrap = document.querySelector('.contact-btn-wrap'); // outermost fixed wrapper
-      if (!btnBg || !btnText || !btnWrap) return;
-
-      // Temporarily hide the button to detect what's underneath
-      btnWrap.style.pointerEvents = 'none';
-      btnWrap.style.opacity = '0';
-
-      // Get the button's center position
-      const rect = btnWrap.getBoundingClientRect();
-      const x = Math.round(rect.left + rect.width / 2);
-      const y = Math.round(rect.top + rect.height / 2);
-
-      // Find the element under the button
-      const elementUnder = document.elementFromPoint(x, y);
-
-      // Restore the button's visibility
-      btnWrap.style.pointerEvents = '';
-      btnWrap.style.opacity = '';
-
-      // Debug log
-      console.log('Element under button:', elementUnder);
-
-      let isOverDark = false;
-      if (elementUnder && elementUnder.closest('[data-bg="dark"]')) {
-        isOverDark = true;
-      }
-
-      if (isOverDark) {
-        btnBg.classList.add('light');
-        btnText.classList.add('light');
-      } else {
-        btnBg.classList.remove('light');
-        btnText.classList.remove('light');
-      }
-    }
-
-    // Run immediately
-    updateButtonColorOnLoad();
-
-    // Set up scroll triggers for each dark section
     if (btnBg && btnText) {
       document.querySelectorAll('[data-bg="dark"]').forEach(section => {
         ScrollTrigger.create({
           trigger: section,
           start: "top top",
           end: "bottom top",
-          onEnter: () => {
-            btnBg.classList.add('light');
-            btnText.classList.add('light');
-          },
-          onEnterBack: () => {
-            btnBg.classList.add('light');
-            btnText.classList.add('light');
-          },
-          onLeave: () => {
-            btnBg.classList.remove('light');
-            btnText.classList.remove('light');
-          },
-          onLeaveBack: () => {
-            btnBg.classList.remove('light');
-            btnText.classList.remove('light');
+          toggleClass: {
+            targets: [btnBg, btnText],
+            className: "light"
           }
         });
       });

@@ -277,11 +277,34 @@ Promise.all([
       });
     }
 
+    // Guarantee correct button color state on initial load
+    function setButtonColorManually() {
+      const btnBg = document.querySelector('.button-color-tennis_bg');
+      const btnText = document.querySelector('.button-color-tennis_text');
+      if (!btnBg || !btnText) return;
+      let isOverDark = false;
+      document.querySelectorAll('[data-bg="dark"]').forEach(section => {
+        const rect = section.getBoundingClientRect();
+        // Use a small margin for robustness
+        if (rect.top <= 1 && rect.bottom > 1) {
+          isOverDark = true;
+        }
+      });
+      if (isOverDark) {
+        btnBg.classList.add('light');
+        btnText.classList.add('light');
+      } else {
+        btnBg.classList.remove('light');
+        btnText.classList.remove('light');
+      }
+    }
+
     // Force ScrollTrigger to refresh and update after everything is loaded
     window.addEventListener('load', () => {
       setTimeout(() => {
         ScrollTrigger.refresh(true);
-      }, 50);
+        setButtonColorManually();
+      }, 100);
     });
   }
 

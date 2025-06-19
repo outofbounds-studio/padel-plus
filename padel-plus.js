@@ -35,6 +35,7 @@ console.log('[Padel Plus] Before Promise.all for dependencies');
 Promise.all([
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js'),
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'),
+  loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js'),
   loadScript('https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.min.js'),
   loadScript('https://player.vimeo.com/api/player.js') // Vimeo Player API
 ]).then(() => {
@@ -42,8 +43,9 @@ Promise.all([
   console.log('[Padel Plus] All dependencies loaded (inside .then)');
   console.log('GSAP loaded:', !!window.gsap);
   console.log('ScrollTrigger loaded:', !!window.ScrollTrigger);
+  console.log('Flip loaded:', !!window.Flip);
   console.log('Lenis loaded:', !!window.Lenis);
-  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger, Flip);
 
   function runPadelPlusAnimationLogic() {
     console.log('[Padel Plus] DOMContentLoaded, running animation logic');
@@ -52,6 +54,135 @@ Promise.all([
       autoRaf: true,
     });
     console.log('[Padel Plus] Lenis instance created:', window.lenis);
+
+    // Initialize GSAP Flip animations
+    function initFlipAnimations() {
+      console.log('[Flip Debug] DOMContentLoaded fired');
+      // Ensure GSAP, ScrollTrigger, and Flip are loaded
+      if (!window.gsap || !window.Flip || !window.ScrollTrigger) {
+        console.error('[Flip Debug] GSAP, Flip, or ScrollTrigger not loaded!', {
+          gsap: !!window.gsap,
+          Flip: !!window.Flip,
+          ScrollTrigger: !!window.ScrollTrigger
+        });
+        return;
+      }
+      gsap.registerPlugin(ScrollTrigger, Flip);
+      console.log('[Flip Debug] GSAP, Flip, and ScrollTrigger registered');
+
+      // LOGO FLIP
+      ScrollTrigger.create({
+        trigger: ".hero", // The hero section
+        start: "bottom top", // When the bottom of hero hits the top of viewport
+        end: "+=1", // Just a tiny range to trigger once
+        onEnter: () => {
+          console.log('[Flip Debug] ScrollTrigger LOGO onEnter (moveLogoToNavbar)');
+          moveLogoToNavbar();
+        },
+        onLeaveBack: () => {
+          console.log('[Flip Debug] ScrollTrigger LOGO onLeaveBack (moveLogoToHero)');
+          moveLogoToHero();
+        }
+      });
+
+      function moveLogoToNavbar() {
+        const logo = document.querySelector('[data-flip-id="logo"]');
+        const navbarContainer = document.querySelector('.logo-wrapper[data-flip-container="logo"]');
+        console.log('[Flip Debug] moveLogoToNavbar called', { logo, navbarContainer });
+        if (!logo || !navbarContainer) {
+          console.warn('[Flip Debug] moveLogoToNavbar: logo or navbarContainer not found');
+          return;
+        }
+        const state = Flip.getState(logo);
+        navbarContainer.appendChild(logo);
+        Flip.from(state, {
+          duration: 0.7,
+          ease: "power2.inOut",
+          absolute: true,
+          scale: true,
+          onStart: () => console.log('[Flip Debug] Flip.from (logo to navbar) started'),
+          onComplete: () => console.log('[Flip Debug] Flip.from (logo to navbar) complete')
+        });
+      }
+
+      function moveLogoToHero() {
+        const logo = document.querySelector('[data-flip-id="logo"]');
+        const heroContainer = document.querySelector('.hero-logo-wrapper[data-flip-container="logo"]');
+        console.log('[Flip Debug] moveLogoToHero called', { logo, heroContainer });
+        if (!logo || !heroContainer) {
+          console.warn('[Flip Debug] moveLogoToHero: logo or heroContainer not found');
+          return;
+        }
+        const state = Flip.getState(logo);
+        heroContainer.appendChild(logo);
+        Flip.from(state, {
+          duration: 0.7,
+          ease: "power2.inOut",
+          absolute: true,
+          scale: true,
+          onStart: () => console.log('[Flip Debug] Flip.from (logo to hero) started'),
+          onComplete: () => console.log('[Flip Debug] Flip.from (logo to hero) complete')
+        });
+      }
+
+      // COURTS IMAGE FLIP
+      ScrollTrigger.create({
+        trigger: ".courts-large", // The section where the large courts image should appear
+        start: "top 80%", // Adjust as needed
+        end: "bottom top",
+        onEnter: () => {
+          console.log('[Flip Debug] ScrollTrigger COURTS onEnter (moveCourtsToLarge)');
+          moveCourtsToLarge();
+        },
+        onLeaveBack: () => {
+          console.log('[Flip Debug] ScrollTrigger COURTS onLeaveBack (moveCourtsToSmall)');
+          moveCourtsToSmall();
+        }
+      });
+
+      function moveCourtsToLarge() {
+        const courts = document.querySelector('[data-flip-id="courts"]');
+        const largeContainer = document.querySelector('.courts-image-large[data-flip-container="courts"]');
+        console.log('[Flip Debug] moveCourtsToLarge called', { courts, largeContainer });
+        if (!courts || !largeContainer) {
+          console.warn('[Flip Debug] moveCourtsToLarge: courts or largeContainer not found');
+          return;
+        }
+        const state = Flip.getState(courts);
+        largeContainer.appendChild(courts);
+        Flip.from(state, {
+          duration: 0.7,
+          ease: "power2.inOut",
+          absolute: true,
+          scale: true,
+          onStart: () => console.log('[Flip Debug] Flip.from (courts to large) started'),
+          onComplete: () => console.log('[Flip Debug] Flip.from (courts to large) complete')
+        });
+      }
+
+      function moveCourtsToSmall() {
+        const courts = document.querySelector('[data-flip-id="courts"]');
+        const smallContainer = document.querySelector('.courts-image-small[data-flip-container="courts"]');
+        console.log('[Flip Debug] moveCourtsToSmall called', { courts, smallContainer });
+        if (!courts || !smallContainer) {
+          console.warn('[Flip Debug] moveCourtsToSmall: courts or smallContainer not found');
+          return;
+        }
+        const state = Flip.getState(courts);
+        smallContainer.appendChild(courts);
+        Flip.from(state, {
+          duration: 0.7,
+          ease: "power2.inOut",
+          absolute: true,
+          scale: true,
+          onStart: () => console.log('[Flip Debug] Flip.from (courts to small) started'),
+          onComplete: () => console.log('[Flip Debug] Flip.from (courts to small) complete')
+        });
+      }
+    }
+
+    // Initialize Flip animations after a short delay to ensure DOM is ready
+    setTimeout(initFlipAnimations, 100);
 
     // Scroll-To Anchor Lenis
     function initScrollToAnchorLenis() {

@@ -74,7 +74,7 @@ Promise.all([
       function injectFlipStyles() {
         const style = document.createElement('style');
         style.textContent = `
-          .logo-wrapper[data-flip-container="logo"] {
+          .logo-contain[data-flip-container="logo"] {
             transition: none !important;
             overflow: hidden !important;
             display: flex !important;
@@ -104,7 +104,7 @@ Promise.all([
 
       // Initialize container widths - only set navbar to 10em, leave hero at natural width
       function initializeContainerWidths() {
-        const navbarContainer = document.querySelector('.logo-wrapper[data-flip-container="logo"]');
+        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
         const heroContainer = document.querySelector('.hero-logo-wrapper[data-flip-container="logo"]');
         
         if (navbarContainer) {
@@ -166,12 +166,12 @@ Promise.all([
 
       function logLogoState(context) {
         const logo = document.querySelector('[data-flip-id="logo"]');
-        const navbarContainer = document.querySelector('.logo-wrapper[data-flip-container="logo"]');
+        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
         const heroContainer = document.querySelector('.hero-logo-wrapper[data-flip-container="logo"]');
         if (logo) {
           console.log(`[Flip Debug] [${context}] Logo parent:`, logo.parentElement);
           if (navbarContainer) {
-            console.log(`[Flip Debug] [${context}] .logo-wrapper width:`, getComputedStyle(navbarContainer).width);
+            console.log(`[Flip Debug] [${context}] .logo-contain width:`, getComputedStyle(navbarContainer).width);
           }
           if (heroContainer) {
             console.log(`[Flip Debug] [${context}] .hero-logo-wrapper width:`, getComputedStyle(heroContainer).width);
@@ -208,7 +208,7 @@ Promise.all([
 
       function moveLogoToNavbar() {
         const logo = document.querySelector('[data-flip-id="logo"]');
-        const navbarContainer = document.querySelector('.logo-wrapper[data-flip-container="logo"]');
+        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
         if (!logo || !navbarContainer) {
           console.warn('[Flip Debug] moveLogoToNavbar: logo or navbarContainer not found');
           return;
@@ -245,7 +245,7 @@ Promise.all([
       function moveLogoToHero() {
         const logo = document.querySelector('[data-flip-id="logo"]');
         const heroContainer = document.querySelector('.hero-logo-wrapper[data-flip-container="logo"]');
-        const navbarContainer = document.querySelector('.logo-wrapper[data-flip-container="logo"]');
+        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
         if (!logo || !heroContainer || !navbarContainer) {
           console.warn('[Flip Debug] moveLogoToHero: logo, heroContainer, or navbarContainer not found');
           return;

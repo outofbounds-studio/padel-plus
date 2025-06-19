@@ -77,11 +77,17 @@ Promise.all([
           .logo-wrapper[data-flip-container="logo"] {
             transition: none !important;
             overflow: hidden !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
           }
           
           .hero-logo-wrapper[data-flip-container="logo"] {
             transition: none !important;
             overflow: hidden !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
           }
           
           [data-flip-id="logo"] {
@@ -89,6 +95,7 @@ Promise.all([
             height: auto !important;
             transition: none !important;
             max-height: 100vh !important;
+            object-fit: contain !important;
           }
         `;
         document.head.appendChild(style);
@@ -177,7 +184,7 @@ Promise.all([
       // LOGO FLIP 
       ScrollTrigger.create({
         trigger: ".hero", // The hero section
-        start: "bottom top", // When the bottom of hero hits the top of viewport
+        start: "top top", // When the top of hero hits the top of viewport
         end: "+=1", // Just a tiny range to trigger once
         onEnter: () => {
           console.log('[Flip Debug] ScrollTrigger LOGO onEnter (moveLogoToNavbar)');
@@ -207,7 +214,7 @@ Promise.all([
           return;
         }
         logLogoState('moveLogoToNavbar (before)');
-        const state = Flip.getState(logo, { props: "width" });
+        const state = Flip.getState(logo, { props: "width,height" });
         navbarContainer.appendChild(logo);
 
         gsap.to(navbarContainer, {
@@ -244,7 +251,7 @@ Promise.all([
           return;
         }
         logLogoState('moveLogoToHero (before)');
-        const state = Flip.getState(logo, { props: "width" });
+        const state = Flip.getState(logo, { props: "width,height" });
         heroContainer.appendChild(logo);
 
         // Reset navbar container to 10em width (in case it was changed)

@@ -80,6 +80,8 @@ Promise.all([
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            width: 10em !important;
+            max-width: 10em !important;
           }
           
           .hero-logo-wrapper[data-flip-container="logo"] {
@@ -88,6 +90,8 @@ Promise.all([
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            width: 100% !important;
+            max-width: 100% !important;
           }
           
           [data-flip-id="logo"] {
@@ -96,6 +100,7 @@ Promise.all([
             transition: none !important;
             max-height: 100vh !important;
             object-fit: contain !important;
+            max-width: 100% !important;
           }
         `;
         document.head.appendChild(style);
@@ -214,31 +219,36 @@ Promise.all([
           return;
         }
         logLogoState('moveLogoToNavbar (before)');
-        const state = Flip.getState(logo, { props: "width,height" });
+        
+        // Capture state before moving the logo
+        const state = Flip.getState(logo, { 
+          props: "width,height,scale",
+          simple: true 
+        });
+        
+        // Move logo to navbar container
         navbarContainer.appendChild(logo);
-
-        gsap.to(navbarContainer, {
+        
+        // Set navbar container to 10em immediately
+        gsap.set(navbarContainer, {
           width: "10em",
-          maxWidth: "10em",
-          duration: 0.7,
-          ease: "power2.inOut",
-          onStart: () => {
-            console.log('[Flip Debug] gsap.to (navbar width to 10em) started');
-            logLogoState('gsap.to start (to 10em)');
-          },
-          onComplete: () => {
-            console.log('[Flip Debug] gsap.to (navbar width to 10em) complete');
-            logLogoState('gsap.to complete (to 10em)');
-          }
+          maxWidth: "10em"
         });
 
+        // Animate the Flip
         Flip.from(state, {
           duration: 0.7,
           ease: "power2.inOut",
           absolute: true,
           scale: true,
-          onStart: () => console.log('[Flip Debug] Flip.from (logo to navbar) started'),
-          onComplete: () => console.log('[Flip Debug] Flip.from (logo to navbar) complete')
+          onStart: () => {
+            console.log('[Flip Debug] Flip.from (logo to navbar) started');
+            logLogoState('Flip.from start (to navbar)');
+          },
+          onComplete: () => {
+            console.log('[Flip Debug] Flip.from (logo to navbar) complete');
+            logLogoState('Flip.from complete (to navbar)');
+          }
         });
       }
 
@@ -251,25 +261,36 @@ Promise.all([
           return;
         }
         logLogoState('moveLogoToHero (before)');
-        const state = Flip.getState(logo, { props: "width,height" });
+        
+        // Capture state before moving the logo
+        const state = Flip.getState(logo, { 
+          props: "width,height,scale",
+          simple: true 
+        });
+        
+        // Move logo to hero container
         heroContainer.appendChild(logo);
-
-        // Reset navbar container to 10em width (in case it was changed)
+        
+        // Reset navbar container to 10em width
         gsap.set(navbarContainer, {
           width: "10em",
           maxWidth: "10em"
         });
 
-        // Don't animate hero container width - let it be natural
-        // This should prevent the height issues
-
+        // Animate the Flip
         Flip.from(state, {
           duration: 0.7,
           ease: "power2.inOut",
           absolute: true,
           scale: true,
-          onStart: () => console.log('[Flip Debug] Flip.from (logo to hero) started'),
-          onComplete: () => console.log('[Flip Debug] Flip.from (logo to hero) complete')
+          onStart: () => {
+            console.log('[Flip Debug] Flip.from (logo to hero) started');
+            logLogoState('Flip.from start (to hero)');
+          },
+          onComplete: () => {
+            console.log('[Flip Debug] Flip.from (logo to hero) complete');
+            logLogoState('Flip.from complete (to hero)');
+          }
         });
       }
 

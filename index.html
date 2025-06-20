@@ -11,6 +11,9 @@
             margin: 0 auto;
             padding: 40px 20px;
             line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            min-height: 300vh; /* For testing scroll */
         }
         
         h1 {
@@ -50,9 +53,93 @@
             background: #ffebee;
             border-color: #f44336;
         }
+        
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1em 1.25em;
+            z-index: 100;
+        }
+        
+        .logo-contain {
+            position: relative;
+            width: 10em;
+            height: auto;
+        }
+        
+        .logo {
+            width: 100%;
+            height: auto;
+        }
+        
+        .hero {
+            position: relative;
+            width: 100%;
+            padding: 0.8em;
+            height: 100vh;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .hero-logo-wrapper {
+            width: calc(100% - 1.6em);
+            height: auto;
+        }
+        
+        .courts-section {
+            position: relative;
+            padding: 5em;
+            min-height: 100vh;
+        }
+        
+        .courts-image-small {
+            width: 20em;
+            height: auto;
+            position: relative;
+        }
+        
+        .courts-image-large {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+        
+        [data-flip-id] {
+            transform: translateZ(0);
+        }
     </style>
 </head>
 <body>
+    <!-- Header with logo -->
+    <header class="header">
+        <div class="logo-contain" data-flip-container="logo">
+            <!-- This div will be the target for the logo animation -->
+        </div>
+    </header>
+
+    <!-- Hero section with initial large logo -->
+    <section class="hero">
+        <div class="hero-logo-wrapper" data-flip-container="logo">
+            <img src="path/to/your/logo.svg" alt="Padel Plus Logo" class="logo" data-flip-id="logo">
+        </div>
+    </section>
+
+    <!-- Courts section -->
+    <section class="courts-section">
+        <div class="courts-image-small" data-flip-container="courts">
+            <img src="path/to/courts-image.jpg" alt="Padel Courts" data-flip-id="courts">
+        </div>
+    </section>
+
+    <!-- Large courts image section -->
+    <section class="courts-section">
+        <div class="courts-image-large" data-flip-container="courts">
+            <!-- This div will be the target for the courts image animation -->
+        </div>
+    </section>
+
     <h1>🏓 Padel Plus Development Test</h1>
     
     <div class="test-section">

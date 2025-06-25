@@ -228,11 +228,8 @@ Promise.all([
       });
     });
 
-    // Smooth background color transition for body
-    if (
-      window.location.pathname === '/product' ||
-      window.location.pathname.startsWith('/product/')
-    ) {
+    // Smooth background color transition for body (only on /products)
+    if (window.location.pathname === '/products') {
       ScrollTrigger.create({
         trigger: '.product-section',
         start: 'top top',
@@ -412,6 +409,15 @@ Promise.all([
         onStart: () => console.log('[Flip Debug] Flip.from (courts to small) started'),
         onComplete: () => console.log('[Flip Debug] Flip.from (courts to small) complete')
       });
+    }
+
+    // Add .homepage class to body if on homepage
+    if (
+      window.location.pathname === '/' ||
+      window.location.pathname === '/index.html' ||
+      window.location.pathname === '/home'
+    ) {
+      document.body.classList.add('homepage');
     }
   }
 

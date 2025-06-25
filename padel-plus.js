@@ -343,7 +343,7 @@ Promise.all([
         onEnter: () => {
           const tl = gsap.timeline();
           tl.to('.logo-contain', { width: '10em', duration: 0.5, ease: 'power1.inOut' }, 0)
-            .to(['.nav-menu', '.contact-btn-wrap'], { opacity: 1, y: 0, pointerEvents: 'auto', duration: 0.4 }, 0.2);
+            .to(['.nav-menu', '.contact-btn-wrap'], { opacity: 1, y: 0, pointerEvents: 'auto', duration: 0.4 }, 0.3);
           document.body.classList.add('nav-active');
         },
         onLeaveBack: () => {

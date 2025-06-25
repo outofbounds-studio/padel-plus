@@ -1,5 +1,5 @@
-/**   // force update 2024-06-24 again
- * Padel Plus - Main JS - 24.06.2025 15.18
+/**   // force update 2024-06-25 again
+ * Padel Plus - Main JS - 25.06.2025 12.28
  * 
  */
 

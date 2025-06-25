@@ -55,267 +55,6 @@ Promise.all([
     });
     console.log('[Padel Plus] Lenis instance created:', window.lenis);
 
-    // Initialize GSAP Flip animations
-    function initFlipAnimations() {
-      console.log('[Flip Debug] DOMContentLoaded fired');
-      // Ensure GSAP, ScrollTrigger, and Flip are loaded
-      if (!window.gsap || !window.Flip || !window.ScrollTrigger) {
-        console.error('[Flip Debug] GSAP, Flip, or ScrollTrigger not loaded!', {
-          gsap: !!window.gsap,
-          Flip: !!window.Flip,
-          ScrollTrigger: !!window.ScrollTrigger
-        });
-        return;
-      }
-      gsap.registerPlugin(ScrollTrigger, Flip);
-      console.log('[Flip Debug] GSAP, Flip, and ScrollTrigger registered');
-
-      // Inject CSS to ensure proper initial states
-      function injectFlipStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-          .logo-contain[data-flip-container="logo"] {
-            transition: none !important;
-            overflow: hidden !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 10em !important;
-            max-width: 10em !important;
-          }
-          
-          .hero-logo-wrapper[data-flip-container="logo"] {
-            transition: none !important;
-            overflow: hidden !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-          
-          [data-flip-id="logo"] {
-            width: 100% !important;
-            height: auto !important;
-            transition: none !important;
-            max-height: 100vh !important;
-            object-fit: contain !important;
-            max-width: 100% !important;
-          }
-        `;
-        document.head.appendChild(style);
-        console.log('[Flip Debug] Injected flip styles');
-      }
-
-      // Initialize container widths - only set navbar to 10em, leave hero at natural width
-      function initializeContainerWidths() {
-        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
-        const heroContainer = document.querySelector('.hero-logo-wrapper[data-flip-container="logo"]');
-        
-        if (navbarContainer) {
-          gsap.set(navbarContainer, {
-            width: "10em",
-            maxWidth: "10em"
-          });
-          console.log('[Flip Debug] Initialized navbar container to 10em');
-        }
-        
-        // Don't set hero container width - let it be natural
-        if (heroContainer) {
-          console.log('[Flip Debug] Hero container left at natural width');
-        }
-      }
-
-      // Initialize on load - delay to ensure DOM is ready
-      setTimeout(() => {
-        injectFlipStyles();
-        initializeContainerWidths();
-      }, 100);
-
-      function logLogoState(context) {
-        const logo = document.querySelector('[data-flip-id="logo"]');
-        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
-        const heroContainer = document.querySelector('.hero-logo-wrapper[data-flip-container="logo"]');
-        if (logo) {
-          console.log(`[Flip Debug] [${context}] Logo parent:`, logo.parentElement);
-          if (navbarContainer) {
-            console.log(`[Flip Debug] [${context}] .logo-contain width:`, getComputedStyle(navbarContainer).width);
-          }
-          if (heroContainer) {
-            console.log(`[Flip Debug] [${context}] .hero-logo-wrapper width:`, getComputedStyle(heroContainer).width);
-          }
-        } else {
-          console.warn(`[Flip Debug] [${context}] Logo not found`);
-        }
-      }
-
-      // LOGO FLIP 
-      ScrollTrigger.create({
-        trigger: ".hero", // The hero section
-        start: "top top", // When the top of hero hits the top of viewport
-        end: "+=1", // Just a tiny range to trigger once
-        onEnter: () => {
-          console.log('[Flip Debug] ScrollTrigger LOGO onEnter (moveLogoToNavbar)');
-          logLogoState('onEnter');
-          moveLogoToNavbar();
-        },
-        onLeaveBack: () => {
-          console.log('[Flip Debug] ScrollTrigger LOGO onLeaveBack (moveLogoToHero)');
-          logLogoState('onLeaveBack');
-          moveLogoToHero();
-        },
-        onUpdate: self => {
-          console.log('[Flip Debug] ScrollTrigger LOGO onUpdate', {
-            progress: self.progress,
-            scroll: self.scroll(),
-            start: self.start,
-            end: self.end
-          });
-        }
-      });
-
-      function moveLogoToNavbar() {
-        const logo = document.querySelector('[data-flip-id="logo"]');
-        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
-        if (!logo || !navbarContainer) {
-          console.warn('[Flip Debug] moveLogoToNavbar: logo or navbarContainer not found');
-          return;
-        }
-        logLogoState('moveLogoToNavbar (before)');
-        
-        // Capture state before moving the logo
-        const state = Flip.getState(logo, { 
-          props: "width,height,scale",
-          simple: true 
-        });
-        
-        // Move logo to navbar container
-        navbarContainer.appendChild(logo);
-        
-        // Set navbar container to 10em immediately
-        gsap.set(navbarContainer, {
-          width: "10em",
-          maxWidth: "10em"
-        });
-
-        // Animate the Flip
-        Flip.from(state, {
-          duration: 0.7,
-          ease: "power2.inOut",
-          absolute: true,
-          scale: true,
-          onStart: () => {
-            console.log('[Flip Debug] Flip.from (logo to navbar) started');
-            logLogoState('Flip.from start (to navbar)');
-          },
-          onComplete: () => {
-            console.log('[Flip Debug] Flip.from (logo to navbar) complete');
-            logLogoState('Flip.from complete (to navbar)');
-          }
-        });
-      }
-
-      function moveLogoToHero() {
-        const logo = document.querySelector('[data-flip-id="logo"]');
-        const heroContainer = document.querySelector('.hero-logo-wrapper[data-flip-container="logo"]');
-        const navbarContainer = document.querySelector('.logo-contain[data-flip-container="logo"]');
-        if (!logo || !heroContainer || !navbarContainer) {
-          console.warn('[Flip Debug] moveLogoToHero: logo, heroContainer, or navbarContainer not found');
-          return;
-        }
-        logLogoState('moveLogoToHero (before)');
-        
-        // Capture state before moving the logo
-        const state = Flip.getState(logo, { 
-          props: "width,height,scale",
-          simple: true 
-        });
-        
-        // Move logo to hero container
-        heroContainer.appendChild(logo);
-        
-        // Reset navbar container to 10em width
-        gsap.set(navbarContainer, {
-          width: "10em",
-          maxWidth: "10em"
-        });
-
-        // Animate the Flip
-        Flip.from(state, {
-          duration: 0.7,
-          ease: "power2.inOut",
-          absolute: true,
-          scale: true,
-          onStart: () => {
-            console.log('[Flip Debug] Flip.from (logo to hero) started');
-            logLogoState('Flip.from start (to hero)');
-          },
-          onComplete: () => {
-            console.log('[Flip Debug] Flip.from (logo to hero) complete');
-            logLogoState('Flip.from complete (to hero)');
-          }
-        });
-      }
-
-      // COURTS IMAGE FLIP
-      ScrollTrigger.create({
-        trigger: ".courts-large", // The section where the large courts image should appear
-        start: "top 80%", // Adjust as needed
-        end: "bottom top",
-        onEnter: () => {
-          console.log('[Flip Debug] ScrollTrigger COURTS onEnter (moveCourtsToLarge)');
-          moveCourtsToLarge();
-        },
-        onLeaveBack: () => {
-          console.log('[Flip Debug] ScrollTrigger COURTS onLeaveBack (moveCourtsToSmall)');
-          moveCourtsToSmall();
-        }
-      });
-
-      function moveCourtsToLarge() {
-        const courts = document.querySelector('[data-flip-id="courts"]');
-        const largeContainer = document.querySelector('.courts-image-large[data-flip-container="courts"]');
-        console.log('[Flip Debug] moveCourtsToLarge called', { courts, largeContainer });
-        if (!courts || !largeContainer) {
-          console.warn('[Flip Debug] moveCourtsToLarge: courts or largeContainer not found');
-          return;
-        }
-        const state = Flip.getState(courts);
-        largeContainer.appendChild(courts);
-        Flip.from(state, {
-          duration: 0.7,
-          ease: "power2.inOut",
-          absolute: true,
-          scale: true,
-          onStart: () => console.log('[Flip Debug] Flip.from (courts to large) started'),
-          onComplete: () => console.log('[Flip Debug] Flip.from (courts to large) complete')
-        });
-      }
-
-      function moveCourtsToSmall() {
-        const courts = document.querySelector('[data-flip-id="courts"]');
-        const smallContainer = document.querySelector('.courts-image-small[data-flip-container="courts"]');
-        console.log('[Flip Debug] moveCourtsToSmall called', { courts, smallContainer });
-        if (!courts || !smallContainer) {
-          console.warn('[Flip Debug] moveCourtsToSmall: courts or smallContainer not found');
-          return;
-        }
-        const state = Flip.getState(courts);
-        smallContainer.appendChild(courts);
-        Flip.from(state, {
-          duration: 0.7,
-          ease: "power2.inOut",
-          absolute: true,
-          scale: true,
-          onStart: () => console.log('[Flip Debug] Flip.from (courts to small) started'),
-          onComplete: () => console.log('[Flip Debug] Flip.from (courts to small) complete')
-        });
-      }
-    }
-
-    // Initialize Flip animations after a short delay to ensure DOM is ready
-    setTimeout(initFlipAnimations, 100);
-
     // Scroll-To Anchor Lenis
     function initScrollToAnchorLenis() {
       document.querySelectorAll('[data-anchor-target]').forEach(element => {
@@ -608,6 +347,61 @@ Promise.all([
       }
     });
     // === END LOGO/NAV ANIMATION ===
+
+    // COURTS IMAGE FLIP
+    ScrollTrigger.create({
+      trigger: ".courts-large", // The section where the large courts image should appear
+      start: "top 80%", // Adjust as needed
+      end: "bottom top",
+      onEnter: () => {
+        console.log('[Flip Debug] ScrollTrigger COURTS onEnter (moveCourtsToLarge)');
+        moveCourtsToLarge();
+      },
+      onLeaveBack: () => {
+        console.log('[Flip Debug] ScrollTrigger COURTS onLeaveBack (moveCourtsToSmall)');
+        moveCourtsToSmall();
+      }
+    });
+
+    function moveCourtsToLarge() {
+      const courts = document.querySelector('[data-flip-id="courts"]');
+      const largeContainer = document.querySelector('.courts-image-large[data-flip-container="courts"]');
+      console.log('[Flip Debug] moveCourtsToLarge called', { courts, largeContainer });
+      if (!courts || !largeContainer) {
+        console.warn('[Flip Debug] moveCourtsToLarge: courts or largeContainer not found');
+        return;
+      }
+      const state = Flip.getState(courts);
+      largeContainer.appendChild(courts);
+      Flip.from(state, {
+        duration: 0.7,
+        ease: "power2.inOut",
+        absolute: true,
+        scale: true,
+        onStart: () => console.log('[Flip Debug] Flip.from (courts to large) started'),
+        onComplete: () => console.log('[Flip Debug] Flip.from (courts to large) complete')
+      });
+    }
+
+    function moveCourtsToSmall() {
+      const courts = document.querySelector('[data-flip-id="courts"]');
+      const smallContainer = document.querySelector('.courts-image-small[data-flip-container="courts"]');
+      console.log('[Flip Debug] moveCourtsToSmall called', { courts, smallContainer });
+      if (!courts || !smallContainer) {
+        console.warn('[Flip Debug] moveCourtsToSmall: courts or smallContainer not found');
+        return;
+      }
+      const state = Flip.getState(courts);
+      smallContainer.appendChild(courts);
+      Flip.from(state, {
+        duration: 0.7,
+        ease: "power2.inOut",
+        absolute: true,
+        scale: true,
+        onStart: () => console.log('[Flip Debug] Flip.from (courts to small) started'),
+        onComplete: () => console.log('[Flip Debug] Flip.from (courts to small) complete')
+      });
+    }
   }
 
   if (document.readyState === 'loading') {

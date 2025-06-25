@@ -334,7 +334,8 @@ Promise.all([
 
     ScrollTrigger.create({
       trigger: '.hero',
-      start: 'top top+=10%',
+      start: 'top+=50 top',
+      end: 'bottom top',
       onEnter: () => {
         gsap.to('.logo-contain', { width: '10em', duration: 0.7, ease: 'power2.inOut' });
         gsap.to(['.nav-menu', '.contact-btn-wrap'], { opacity: 1, y: 0, pointerEvents: 'auto', duration: 0.4, delay: 0.2 });

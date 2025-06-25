@@ -126,47 +126,10 @@ Promise.all([
         }
       }
 
-      // Manual test function
-      function addManualTestButton() {
-        const testButton = document.createElement('button');
-        testButton.textContent = 'Test Logo Animation';
-        testButton.style.cssText = `
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          z-index: 10000;
-          padding: 10px 20px;
-          background: #007bff;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          font-size: 14px;
-        `;
-        
-        let isInNavbar = false;
-        testButton.addEventListener('click', () => {
-          console.log('[Flip Debug] Manual test button clicked');
-          if (isInNavbar) {
-            moveLogoToHero();
-            isInNavbar = false;
-            testButton.textContent = 'Test Logo Animation (Move to Hero)';
-          } else {
-            moveLogoToNavbar();
-            isInNavbar = true;
-            testButton.textContent = 'Test Logo Animation (Move to Navbar)';
-          }
-        });
-        
-        document.body.appendChild(testButton);
-        console.log('[Flip Debug] Added manual test button');
-      }
-
       // Initialize on load - delay to ensure DOM is ready
       setTimeout(() => {
         injectFlipStyles();
         initializeContainerWidths();
-        addManualTestButton();
       }, 100);
 
       function logLogoState(context) {

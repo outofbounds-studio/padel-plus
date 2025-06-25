@@ -229,39 +229,44 @@ Promise.all([
     });
 
     // Smooth background color transition for body
-    ScrollTrigger.create({
-      trigger: '.product-section',
-      start: 'top top',
-      end: 'bottom 60%',
-      onEnter: () => {
-        gsap.to('body', {
-          backgroundColor: '#1a1a1a',
-          duration: 0.3,
-          ease: 'power2.out'
-        });
-      },
-      onLeave: () => {
-        gsap.to('body', {
-          backgroundColor: '#f9f9f9',
-          duration: 0.1,
-          ease: 'power2.out'
-        });
-      },
-      onEnterBack: () => {
-        gsap.to('body', {
-          backgroundColor: '#1a1a1a',
-          duration: 0.3,
-          ease: 'power2.out'
-        });
-      },
-      onLeaveBack: () => {
-        gsap.to('body', {
-          backgroundColor: '#f9f9f9',
-          duration: 0.1,
-          ease: 'power2.out'
-        });
-      }
-    });
+    if (
+      window.location.pathname === '/product' ||
+      window.location.pathname.startsWith('/product/')
+    ) {
+      ScrollTrigger.create({
+        trigger: '.product-section',
+        start: 'top top',
+        end: 'bottom 60%',
+        onEnter: () => {
+          gsap.to('body', {
+            backgroundColor: '#1a1a1a',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        },
+        onLeave: () => {
+          gsap.to('body', {
+            backgroundColor: '#f9f9f9',
+            duration: 0.1,
+            ease: 'power2.out'
+          });
+        },
+        onEnterBack: () => {
+          gsap.to('body', {
+            backgroundColor: '#1a1a1a',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        },
+        onLeaveBack: () => {
+          gsap.to('body', {
+            backgroundColor: '#f9f9f9',
+            duration: 0.1,
+            ease: 'power2.out'
+          });
+        }
+      });
+    }
 
     // Toggle nav button color based on section background using ScrollTrigger only
     const btnBg = document.querySelector('.button-color-tennis_bg');
@@ -329,24 +334,27 @@ Promise.all([
     }
 
     // === LOGO/NAV ANIMATION ===
-    gsap.set('.logo-contain', { width: '100%' });
-    gsap.set(['.nav-menu', '.contact-btn-wrap'], { opacity: 0, y: -20, pointerEvents: 'none' });
-
-    ScrollTrigger.create({
-      trigger: '.hero',
-      start: 'top+=50 top',
-      end: 'bottom top',
-      onEnter: () => {
-        gsap.to('.logo-contain', { width: '10em', duration: 0.7, ease: 'power1.inOut' });
-        gsap.to(['.nav-menu', '.contact-btn-wrap'], { opacity: 1, y: 0, pointerEvents: 'auto', duration: 0.4, delay: 0.2 });
-        document.body.classList.add('nav-active');
-      },
-      onLeaveBack: () => {
-        gsap.to('.logo-contain', { width: '100%', duration: 0.7, ease: 'power2.inOut' });
-        gsap.to(['.nav-menu', '.contact-btn-wrap'], { opacity: 0, y: -20, pointerEvents: 'none', duration: 0.4 });
-        document.body.classList.remove('nav-active');
-      }
-    });
+    if (
+      window.location.pathname === '/' ||
+      window.location.pathname === '/index.html' ||
+      window.location.pathname === '/home'
+    ) {
+      ScrollTrigger.create({
+        trigger: '.hero',
+        start: 'top+=50 top',
+        end: 'bottom top',
+        onEnter: () => {
+          gsap.to('.logo-contain', { width: '10em', duration: 0.7, ease: 'power1.inOut' });
+          gsap.to(['.nav-menu', '.contact-btn-wrap'], { opacity: 1, y: 0, pointerEvents: 'auto', duration: 0.4, delay: 0.2 });
+          document.body.classList.add('nav-active');
+        },
+        onLeaveBack: () => {
+          gsap.to('.logo-contain', { width: '100%', duration: 0.7, ease: 'power2.inOut' });
+          gsap.to(['.nav-menu', '.contact-btn-wrap'], { opacity: 0, y: -20, pointerEvents: 'none', duration: 0.4 });
+          document.body.classList.remove('nav-active');
+        }
+      });
+    }
     // === END LOGO/NAV ANIMATION ===
 
     // COURTS IMAGE FLIP

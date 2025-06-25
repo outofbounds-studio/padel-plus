@@ -337,7 +337,7 @@ Promise.all([
       start: 'top+=50 top',
       end: 'bottom top',
       onEnter: () => {
-        gsap.to('.logo-contain', { width: '10em', duration: 0.7, ease: 'power2.inOut' });
+        gsap.to('.logo-contain', { width: '10em', duration: 0.7, ease: 'power1.inOut' });
         gsap.to(['.nav-menu', '.contact-btn-wrap'], { opacity: 1, y: 0, pointerEvents: 'auto', duration: 0.4, delay: 0.2 });
         document.body.classList.add('nav-active');
       },

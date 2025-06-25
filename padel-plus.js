@@ -374,11 +374,7 @@ Promise.all([
     function moveCourtsToLarge() {
       const courts = document.querySelector('[data-flip-id="courts"]');
       const largeContainer = document.querySelector('.courts-image-large[data-flip-container="courts"]');
-      console.log('[Flip Debug] moveCourtsToLarge called', { courts, largeContainer });
-      if (!courts || !largeContainer) {
-        console.warn('[Flip Debug] moveCourtsToLarge: courts or largeContainer not found');
-        return;
-      }
+      if (!courts || !largeContainer) return;
       const state = Flip.getState(courts);
       largeContainer.appendChild(courts);
       Flip.from(state, {
@@ -386,19 +382,15 @@ Promise.all([
         ease: "power2.inOut",
         absolute: true,
         scale: true,
-        onStart: () => console.log('[Flip Debug] Flip.from (courts to large) started'),
-        onComplete: () => console.log('[Flip Debug] Flip.from (courts to large) complete')
+        onStart: () => courts.style.zIndex = 10,
+        onComplete: () => courts.style.zIndex = ""
       });
     }
 
     function moveCourtsToSmall() {
       const courts = document.querySelector('[data-flip-id="courts"]');
       const smallContainer = document.querySelector('.courts-image-small[data-flip-container="courts"]');
-      console.log('[Flip Debug] moveCourtsToSmall called', { courts, smallContainer });
-      if (!courts || !smallContainer) {
-        console.warn('[Flip Debug] moveCourtsToSmall: courts or smallContainer not found');
-        return;
-      }
+      if (!courts || !smallContainer) return;
       const state = Flip.getState(courts);
       smallContainer.appendChild(courts);
       Flip.from(state, {
@@ -406,8 +398,8 @@ Promise.all([
         ease: "power2.inOut",
         absolute: true,
         scale: true,
-        onStart: () => console.log('[Flip Debug] Flip.from (courts to small) started'),
-        onComplete: () => console.log('[Flip Debug] Flip.from (courts to small) complete')
+        onStart: () => courts.style.zIndex = 10,
+        onComplete: () => courts.style.zIndex = ""
       });
     }
 

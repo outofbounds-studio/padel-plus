@@ -513,6 +513,21 @@ Promise.all([
 
             const d = document.createElement("div");
             d.classList.add("dot");
+            
+            // Position the dot in the grid
+            const x = col * (dotPx + gapPx);
+            const y = row * (dotPx + gapPx);
+            
+            // Set basic styles for the dot
+            d.style.cssText = `
+              position: absolute;
+              width: ${dotPx}px;
+              height: ${dotPx}px;
+              border-radius: 50%;
+              left: ${x}px;
+              top: ${y}px;
+              pointer-events: auto;
+            `;
 
             gsap.set(d, { x: 0, y: 0, backgroundColor: colors.base });
             d._inertiaApplied = false;
@@ -826,14 +841,6 @@ Promise.all([
                     height: 100%;
                     z-index: 1;
                     pointer-events: none;
-                }
-
-                .dots-container .dot {
-                    position: absolute;
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    pointer-events: auto;
                 }
 
                 /* Footer content z-index to appear above dots */

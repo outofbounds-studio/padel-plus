@@ -377,6 +377,15 @@ Promise.all([
       if (!courts || !largeContainer) return;
       const state = Flip.getState(courts);
       largeContainer.appendChild(courts);
+
+      // Animate out the plus and text
+      gsap.to(['.img-link-text.flip', '.img-link-plus.flip'], {
+        y: -20,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.in"
+      });
+
       Flip.from(state, {
         duration: 0.7,
         ease: "power2.inOut",
@@ -393,6 +402,15 @@ Promise.all([
       if (!courts || !smallContainer) return;
       const state = Flip.getState(courts);
       smallContainer.appendChild(courts);
+
+      // Animate in the plus and text
+      gsap.to(['.img-link-text.flip', '.img-link-plus.flip'], {
+        y: 0,
+        opacity: 1,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+
       Flip.from(state, {
         duration: 0.7,
         ease: "power2.inOut",

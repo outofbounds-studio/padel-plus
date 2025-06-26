@@ -487,7 +487,7 @@ Promise.all([
         const shockRadius    = 325;
         const shockPower     = 5;
         const maxSpeed       = 5000;
-        const centerHole     = true;
+        const centerHole     = false;
 
         let dots       = [];
         let dotCenters = [];
@@ -518,18 +518,28 @@ Promise.all([
             const x = col * (dotPx + gapPx);
             const y = row * (dotPx + gapPx);
             
+            // Create custom SVG content
+            const svgContent = `
+              <svg width="${dotPx}" height="${dotPx}" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9.04999 9.16H0V14.26H9.04999V9.16Z" fill="currentColor"/>
+                <path d="M14.92 9.16V0H9.04999V9.16H14.92V14.26H9.04999V23.97H14.92V14.26H23.97V9.16H14.92Z" fill="currentColor"/>
+              </svg>
+            `;
+            
             // Set basic styles for the dot
             d.style.cssText = `
               position: absolute;
               width: ${dotPx}px;
               height: ${dotPx}px;
-              border-radius: 50%;
               left: ${x}px;
               top: ${y}px;
               pointer-events: auto;
+              color: ${colors.base};
             `;
+            
+            d.innerHTML = svgContent;
 
-            gsap.set(d, { x: 0, y: 0, backgroundColor: colors.base });
+            gsap.set(d, { x: 0, y: 0 });
             d._inertiaApplied = false;
 
             container.appendChild(d);
@@ -576,7 +586,7 @@ Promise.all([
               const dist = Math.hypot(x - e.pageX, y - e.pageY);
               const t    = Math.max(0, 1 - dist / threshold);
               const col  = gsap.utils.interpolate(colors.base, colors.active, t);
-              gsap.set(el, { backgroundColor: col });
+              gsap.set(el, { color: col });
 
               if (speed > speedThreshold && dist < threshold && !el._inertiaApplied) {
                 el._inertiaApplied = true;

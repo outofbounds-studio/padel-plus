@@ -481,7 +481,7 @@ Promise.all([
 
     function initGlowingInteractiveDotsGrid() {
       document.querySelectorAll('[data-dots-container-init]').forEach(container => {
-        const colors         = { base: "#245E51", active: "#A8FF51" };
+        const colors         = { base: "#3939CA", active: "#A2A2E6" };
         const threshold      = 200;
         const speedThreshold = 100;
         const shockRadius    = 325;

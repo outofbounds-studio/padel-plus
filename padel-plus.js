@@ -429,6 +429,67 @@ Promise.all([
     ) {
       document.body.classList.add('homepage');
     }
+
+    // === MWG EFFECT 003 (Pin Height Circles Fan) ===
+    gsap.to('.mwg_effect003 .scroll', {
+      autoAlpha:0,
+      duration:0.2,
+      scrollTrigger: {
+        trigger:'.mwg_effect003',
+        start:'top top',
+        end:'top top-=1',
+        toggleActions: "play none reverse none"
+      }
+    });
+
+    const pinHeight = document.querySelector('.mwg_effect003 .pin-height');
+    const circles = document.querySelectorAll('.mwg_effect003 .circle');
+
+    gsap.fromTo('.mwg_effect003 .circles', {
+      y: '5%'
+    }, {
+      y: '-5%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: pinHeight,
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: '.mwg_effect003 .container',
+        scrub: true
+      }
+    });
+
+    let angle = 3, 
+        halfRange = (circles.length - 1) * angle / 2,
+        rot = -halfRange;
+
+    const distPerCard = (pinHeight.clientHeight - window.innerHeight) / circles.length;
+
+    circles.forEach((circle, index) => {
+      gsap.to(circle, {
+        rotation: rot,
+        ease: 'power1.out',
+        scrollTrigger: {
+          trigger: pinHeight,
+          start: 'top top-=' + (distPerCard) * index,
+          end: '+=' + (distPerCard),
+          scrub: true
+        }  
+      });
+      gsap.to(circle.querySelector('.card'), {
+        rotation: rot,
+        y: '-50%',
+        ease: 'power1.out',
+        scrollTrigger: {
+          trigger: pinHeight,
+          start: 'top top-=' + (distPerCard) * index,
+          end: '+=' + (distPerCard),
+          scrub: true
+        }  
+      });
+      rot += angle;
+    });
+    // === END MWG EFFECT 003 ===
   }
 
   if (document.readyState === 'loading') {

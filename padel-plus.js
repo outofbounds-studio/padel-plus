@@ -520,13 +520,13 @@ Promise.all([
             
             // Create custom SVG content
             const svgContent = `
-              <svg width="${dotPx}" height="${dotPx}" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="${dotPx}" height="${dotPx}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M9.04999 9.16H0V14.26H9.04999V9.16Z" fill="currentColor"/>
                 <path d="M14.92 9.16V0H9.04999V9.16H14.92V14.26H9.04999V23.97H14.92V14.26H23.97V9.16H14.92Z" fill="currentColor"/>
               </svg>
             `;
             
-            // Set basic styles for the dot
+            // Set basic styles for the dot (no background, no border-radius)
             d.style.cssText = `
               position: absolute;
               width: ${dotPx}px;

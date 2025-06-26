@@ -507,44 +507,29 @@ Promise.all([
           const rows  = Math.floor((contH + gapPx) / (dotPx + gapPx));
           const total = cols * rows;
 
-          const holeCols = centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
-          const holeRows = centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
-          const startCol = (cols - holeCols) / 2;
-          const startRow = (rows - holeRows) / 2;
-
           for (let i = 0; i < total; i++) {
             const row    = Math.floor(i / cols);
             const col    = i % cols;
-            const isHole = centerHole &&
-              row >= startRow && row < startRow + holeRows &&
-              col >= startCol && col < startCol + holeCols;
 
             const d = document.createElement("div");
             d.classList.add("dot");
 
-            if (isHole) {
-              d.style.visibility = "hidden";
-              d._isHole = true;
-            } else {
-              gsap.set(d, { x: 0, y: 0, backgroundColor: colors.base });
-              d._inertiaApplied = false;
-            }
+            gsap.set(d, { x: 0, y: 0, backgroundColor: colors.base });
+            d._inertiaApplied = false;
 
             container.appendChild(d);
             dots.push(d);
           }
 
           requestAnimationFrame(() => {
-            dotCenters = dots
-              .filter(d => !d._isHole)
-              .map(d => {
-                const r = d.getBoundingClientRect();
-                return {
-                  el: d,
-                  x:  r.left + window.scrollX + r.width  / 2,
-                  y:  r.top  + window.scrollY + r.height / 2
-                };
-              });
+            dotCenters = dots.map(d => {
+              const r = d.getBoundingClientRect();
+              return {
+                el: d,
+                x:  r.left + window.scrollX + r.width  / 2,
+                y:  r.top  + window.scrollY + r.height / 2
+              };
+            });
           });
         }
 

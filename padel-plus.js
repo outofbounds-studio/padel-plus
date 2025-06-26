@@ -816,6 +816,41 @@ Promise.all([
                     cursor: pointer;
                     color: #666;
                 }
+
+                /* Dots container styles */
+                .dots-container {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 1;
+                    pointer-events: none;
+                }
+
+                .dots-container .dot {
+                    position: absolute;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    pointer-events: auto;
+                }
+
+                /* Footer content z-index to appear above dots */
+                .footer-top,
+                .footer-list,
+                .footer-bottom {
+                    position: relative;
+                    z-index: 10;
+                }
+
+                /* Ensure all footer links and buttons are above dots */
+                .footer a,
+                .footer button,
+                .footer .button-color-tennis {
+                    position: relative;
+                    z-index: 10;
+                }
             `;
             
             const styleSheet = document.createElement('style');

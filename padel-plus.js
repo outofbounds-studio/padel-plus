@@ -37,9 +37,12 @@ Promise.all([
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'),
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js'),
   loadScript('https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.min.js'),
-  loadScript('https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js').catch(err => {
+  loadScript('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js').catch(err => {
     console.warn('[Padel Plus] Swiper CDN failed, trying alternative...');
-    return loadScript('https://unpkg.com/swiper@10/swiper-bundle.min.js');
+    return loadScript('https://unpkg.com/swiper@11/swiper-bundle.min.js');
+  }).catch(err => {
+    console.warn('[Padel Plus] Swiper unpkg failed, trying jsdelivr...');
+    return loadScript('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js');
   }),
   loadScript('https://player.vimeo.com/api/player.js') // Vimeo Player API
 ]).then(() => {
@@ -51,19 +54,38 @@ Promise.all([
   console.log('Lenis loaded:', !!window.Lenis);
   console.log('Swiper loaded:', !!window.Swiper);
   
-  // If Swiper still isn't loaded, try to load it manually
+  // If Swiper still isn't loaded, try to load it manually with multiple fallbacks
   if (!window.Swiper) {
     console.warn('[Padel Plus] Swiper not loaded via CDN, trying manual load...');
-    const script = document.createElement('script');
-    script.src = 'https://unpkg.com/swiper@10/swiper-bundle.min.js';
-    script.onload = () => {
-      console.log('[Padel Plus] Swiper loaded manually');
-      window.Swiper = window.Swiper || window.Swiper;
-    };
-    script.onerror = () => {
-      console.error('[Padel Plus] Failed to load Swiper manually');
-    };
-    document.head.appendChild(script);
+    const swiperUrls = [
+      'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js',
+      'https://unpkg.com/swiper@11/swiper-bundle.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js'
+    ];
+    
+    let currentUrlIndex = 0;
+    
+    function tryLoadSwiper() {
+      if (currentUrlIndex >= swiperUrls.length) {
+        console.error('[Padel Plus] All Swiper CDN attempts failed');
+        return;
+      }
+      
+      const script = document.createElement('script');
+      script.src = swiperUrls[currentUrlIndex];
+      script.onload = () => {
+        console.log('[Padel Plus] Swiper loaded manually from:', swiperUrls[currentUrlIndex]);
+        console.log('[Padel Plus] Swiper object:', window.Swiper);
+      };
+      script.onerror = () => {
+        console.warn('[Padel Plus] Failed to load Swiper from:', swiperUrls[currentUrlIndex]);
+        currentUrlIndex++;
+        tryLoadSwiper();
+      };
+      document.head.appendChild(script);
+    }
+    
+    tryLoadSwiper();
   }
   
   gsap.registerPlugin(ScrollTrigger, Flip);
@@ -784,10 +806,26 @@ Promise.all([
     // Delay carousel initialization to ensure Swiper is loaded
     setTimeout(() => {
       console.log('[Padel Plus] Starting 3D Carousel initialization...');
+      console.log('[Padel Plus] Current page URL:', window.location.href);
       
       // Check if 3D carousel components exist before running
       const carouselComponents = document.querySelectorAll("[carousel='component']");
       console.log('[Padel Plus] 3D Carousel: Found', carouselComponents.length, 'carousel components');
+      
+      // Debug: Check for any elements with carousel attributes
+      const allCarouselElements = document.querySelectorAll('[carousel]');
+      console.log('[Padel Plus] 3D Carousel: All elements with carousel attribute:', allCarouselElements.length);
+      allCarouselElements.forEach((el, i) => {
+        console.log('[Padel Plus] 3D Carousel: Element', i, 'has attributes:', {
+          carousel: el.getAttribute('carousel'),
+          className: el.className,
+          tagName: el.tagName
+        });
+      });
+      
+      // Debug: Check for swiper elements
+      const swiperElements = document.querySelectorAll('.swiper');
+      console.log('[Padel Plus] 3D Carousel: Found', swiperElements.length, 'swiper elements');
       
       if (carouselComponents.length > 0) {
         console.log('[Padel Plus] 3D Carousel components found, initializing...');

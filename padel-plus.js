@@ -774,14 +774,28 @@ Promise.all([
         carouselComponents.forEach(function(componentEl) {
           const wrapEl = componentEl.querySelector("[carousel='wrap']");
           const swiperEl = componentEl.querySelector(".swiper");
-          const itemEl = wrapEl ? wrapEl.children[0] ? wrapEl.children[0].children : [] : [];
           const nextEl = componentEl.querySelector("[carousel='next']");
           const prevEl = componentEl.querySelector("[carousel='prev']");
           
-          if (!wrapEl || !swiperEl || itemEl.length === 0) {
-            console.warn('[Padel Plus] 3D Carousel: Missing required elements');
+          if (!wrapEl || !swiperEl || !nextEl || !prevEl) {
+            console.warn('[Padel Plus] 3D Carousel: Missing required elements', {
+              wrapEl: !!wrapEl,
+              swiperEl: !!swiperEl,
+              nextEl: !!nextEl,
+              prevEl: !!prevEl
+            });
             return;
           }
+          
+          // Get the carousel items - they're in the wrap's first child (the list)
+          const itemEl = wrapEl.querySelector('.w-dyn-items') ? wrapEl.querySelector('.w-dyn-items').children : [];
+          
+          if (itemEl.length === 0) {
+            console.warn('[Padel Plus] 3D Carousel: No carousel items found');
+            return;
+          }
+          
+          console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'items');
           
           const rotateAmount = 360 / itemEl.length;
           const zTranslate = 2 * Math.tan((rotateAmount / 2) * (Math.PI / 180));
@@ -839,7 +853,7 @@ Promise.all([
                 }
               });
               swiper.on("progress", function (e) {
-                console.log(e.progress);
+                console.log('[Padel Plus] 3D Carousel progress:', e.progress);
                 gsap.to(progress, {
                   value: e.progress,
                   onUpdate: () => {
@@ -847,6 +861,7 @@ Promise.all([
                   }
                 });
               });
+              console.log('[Padel Plus] 3D Carousel: Swiper initialized successfully');
             } else {
               console.warn('[Padel Plus] 3D Carousel: Swiper not loaded');
             }
@@ -858,9 +873,24 @@ Promise.all([
           let componentEl = $(this);
           let wrapEl = componentEl.find("[carousel='wrap']");
           let swiperEl = componentEl.find(".swiper");
-          let itemEl = wrapEl.children().children();
           let nextEl = componentEl.find("[carousel='next']");
           let prevEl = componentEl.find("[carousel='prev']");
+          
+          if (wrapEl.length === 0 || swiperEl.length === 0 || nextEl.length === 0 || prevEl.length === 0) {
+            console.warn('[Padel Plus] 3D Carousel: Missing required elements');
+            return;
+          }
+          
+          // Get the carousel items - they're in the wrap's first child (the list)
+          let itemEl = wrapEl.find('.w-dyn-items').children();
+          
+          if (itemEl.length === 0) {
+            console.warn('[Padel Plus] 3D Carousel: No carousel items found');
+            return;
+          }
+          
+          console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'items');
+          
           let rotateAmount = 360 / itemEl.length;
           let zTranslate = 2 * Math.tan((rotateAmount / 2) * (Math.PI / 180));
           let negTranslate = `calc(var(--3d-carousel-item-width) / -${zTranslate} - var(--3d-carousel-gap))`;
@@ -917,7 +947,7 @@ Promise.all([
                 }
               });
               swiper.on("progress", function (e) {
-                console.log(e.progress);
+                console.log('[Padel Plus] 3D Carousel progress:', e.progress);
                 gsap.to(progress, {
                   value: e.progress,
                   onUpdate: () => {
@@ -925,6 +955,7 @@ Promise.all([
                   }
                 });
               });
+              console.log('[Padel Plus] 3D Carousel: Swiper initialized successfully');
             } else {
               console.warn('[Padel Plus] 3D Carousel: Swiper not loaded');
             }

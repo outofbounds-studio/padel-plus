@@ -85,36 +85,64 @@ Promise.all([
     });
     console.log('[Padel Plus] .scroll animation set up');
 
-    const slides = document.querySelectorAll('.mwg_effect031 .slide');
-    slides.forEach(slide => {
-      const contentWrapper = slide.querySelector('.content-wrapper');
-      const content = slide.querySelector('.content');
-      if (!contentWrapper || !content) return;
-      gsap.to(content, {
-        rotationZ: (Math.random() - 0.5) * 10,
-        scale: 0.7,
-        rotationX: 40,
-        ease: 'power1.in',
+    // === MWG EFFECT 031 (Slide Animations) ===
+    // Check if MWG EFFECT 031 exists before running
+    const mwgEffect031 = document.querySelector(".mwg_effect031");
+    if (mwgEffect031) {
+      console.log('[Padel Plus] MWG EFFECT 031 found, initializing...');
+      
+      gsap.to('.mwg_effect031 .scroll', {
+        autoAlpha:0,
+        duration:0.2,
         scrollTrigger: {
-          pin: contentWrapper,
-          trigger: slide,
-          start: 'top 0%',
-          end: '+=' + window.innerHeight,
-          scrub: true
+          trigger:'.mwg_effect031',
+          start:'top top',
+          end:'top top-=1',
+          toggleActions: "play none reverse none"
         }
       });
-      gsap.to(content, {
-        autoAlpha: 0,
-        ease: 'power1.in',
-        scrollTrigger: {
-          trigger: content,
-          start: 'top -80%',
-          end: '+=' + 0.2 * window.innerHeight,
-          scrub: true
-        }
-      });
-    });
-    console.log('[Padel Plus] Slide animations set up');
+      console.log('[Padel Plus] .scroll animation set up');
+
+      const slides = document.querySelectorAll('.mwg_effect031 .slide');
+      if (slides.length > 0) {
+        console.log('[Padel Plus] MWG EFFECT 031 slides found, creating animations...');
+        
+        slides.forEach(slide => {
+          const contentWrapper = slide.querySelector('.content-wrapper');
+          const content = slide.querySelector('.content');
+          if (!contentWrapper || !content) return;
+          gsap.to(content, {
+            rotationZ: (Math.random() - 0.5) * 10,
+            scale: 0.7,
+            rotationX: 40,
+            ease: 'power1.in',
+            scrollTrigger: {
+              pin: contentWrapper,
+              trigger: slide,
+              start: 'top 0%',
+              end: '+=' + window.innerHeight,
+              scrub: true
+            }
+          });
+          gsap.to(content, {
+            autoAlpha: 0,
+            ease: 'power1.in',
+            scrollTrigger: {
+              trigger: content,
+              start: 'top -80%',
+              end: '+=' + 0.2 * window.innerHeight,
+              scrub: true
+            }
+          });
+        });
+        console.log('[Padel Plus] Slide animations set up');
+      } else {
+        console.warn('[Padel Plus] MWG EFFECT 031: No slides found');
+      }
+    } else {
+      console.log('[Padel Plus] MWG EFFECT 031 not found on this page');
+    }
+    // === END MWG EFFECT 031 ===
 
     // PAGE TRANSITION ANIMATION (vanilla JS)
     console.log('[Padel Plus] Setting up page transitions');
@@ -416,107 +444,154 @@ Promise.all([
     }
 
     // === MWG EFFECT 003 (Pin Height Circles Fan) ===
-    gsap.to('.mwg_effect003 .scroll', {
-      autoAlpha:0,
-      duration:0.2,
-      scrollTrigger: {
-        trigger:'.mwg_effect003',
-        start:'top top',
-        end:'top top-=1',
-        toggleActions: "play none reverse none"
-      }
-    });
-
-    const pinHeight = document.querySelector('.mwg_effect003 .pin-height');
-    const circles = document.querySelectorAll('.mwg_effect003 .circle');
-
-    gsap.fromTo('.mwg_effect003 .circles', {
-      y: '5%'
-    }, {
-      y: '-5%',
-      ease: 'none',
-      scrollTrigger: {
-        trigger: pinHeight,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: '.mwg_effect003 .container',
-        scrub: true
-      }
-    });
-
-    let angle = 3, 
-        halfRange = (circles.length - 1) * angle / 2,
-        rot = -halfRange;
-
-    const distPerCard = (pinHeight.clientHeight - window.innerHeight) / circles.length;
-
-    circles.forEach((circle, index) => {
-      gsap.to(circle, {
-        rotation: rot,
-        ease: 'power1.out',
+    // Check if MWG EFFECT 003 exists before running
+    const mwgEffect003 = document.querySelector(".mwg_effect003");
+    if (mwgEffect003) {
+      console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
+      
+      gsap.to('.mwg_effect003 .scroll', {
+        autoAlpha:0,
+        duration:0.2,
         scrollTrigger: {
-          trigger: pinHeight,
-          start: 'top top-=' + (distPerCard) * index,
-          end: '+=' + (distPerCard),
-          scrub: true
-        }  
+          trigger:'.mwg_effect003',
+          start:'top top',
+          end:'top top-=1',
+          toggleActions: "play none reverse none"
+        }
       });
-      gsap.to(circle.querySelector('.card'), {
-        rotation: rot,
-        y: '-50%',
-        ease: 'power1.out',
-        scrollTrigger: {
-          trigger: pinHeight,
-          start: 'top top-=' + (distPerCard) * index,
-          end: '+=' + (distPerCard),
-          scrub: true
-        }  
-      });
-      rot += angle;
-    });
+
+      const pinHeight = document.querySelector('.mwg_effect003 .pin-height');
+      const circles = document.querySelectorAll('.mwg_effect003 .circle');
+      const circlesContainer = document.querySelector('.mwg_effect003 .circles');
+      const container = document.querySelector('.mwg_effect003 .container');
+
+      // Only create ScrollTrigger if all required elements exist
+      if (pinHeight && circles.length > 0 && circlesContainer && container) {
+        console.log('[Padel Plus] MWG EFFECT 003 elements found, creating ScrollTrigger...');
+        
+        gsap.fromTo('.mwg_effect003 .circles', {
+          y: '5%'
+        }, {
+          y: '-5%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: pinHeight,
+            start: 'top top',
+            end: 'bottom bottom',
+            pin: '.mwg_effect003 .container',
+            scrub: true
+          }
+        });
+
+        let angle = 3, 
+            halfRange = (circles.length - 1) * angle / 2,
+            rot = -halfRange;
+
+        const distPerCard = (pinHeight.clientHeight - window.innerHeight) / circles.length;
+
+        circles.forEach((circle, index) => {
+          gsap.to(circle, {
+            rotation: rot,
+            ease: 'power1.out',
+            scrollTrigger: {
+              trigger: pinHeight,
+              start: 'top top-=' + (distPerCard) * index,
+              end: '+=' + (distPerCard),
+              scrub: true
+            }  
+          });
+          
+          const card = circle.querySelector('.card');
+          if (card) {
+            gsap.to(card, {
+              rotation: rot,
+              y: '-50%',
+              ease: 'power1.out',
+              scrollTrigger: {
+                trigger: pinHeight,
+                start: 'top top-=' + (distPerCard) * index,
+                end: '+=' + (distPerCard),
+                scrub: true
+              }  
+            });
+          }
+          rot += angle;
+        });
+      } else {
+        console.warn('[Padel Plus] MWG EFFECT 003: Missing required elements:', {
+          pinHeight: !!pinHeight,
+          circlesCount: circles.length,
+          circlesContainer: !!circlesContainer,
+          container: !!container
+        });
+      }
+    } else {
+      console.log('[Padel Plus] MWG EFFECT 003 not found on this page');
+    }
     // === END MWG EFFECT 003 ===
 
     // === MWG EFFECT 005 (Pin Height Words Animation) ===
-    // Utility to wrap each word in a span
-    function wrapWordsInSpan(element) {
-      if (!element) return;
-      const text = element.textContent;
-      element.innerHTML = text
-        .split(' ')
-        .map(word => `<span class="word">${word}</span>`)
-        .join(' ');
+    // Check if MWG EFFECT 005 exists before running
+    const mwgEffect005 = document.querySelector(".mwg_effect005");
+    if (mwgEffect005) {
+      console.log('[Padel Plus] MWG EFFECT 005 found, initializing...');
+      
+      // Utility to wrap each word in a span
+      function wrapWordsInSpan(element) {
+        if (!element) return;
+        const text = element.textContent;
+        element.innerHTML = text
+          .split(' ')
+          .map(word => `<span class="word">${word}</span>`)
+          .join(' ');
+      }
+
+      gsap.to('.mwg_effect005 .scroll', {
+        autoAlpha:0,
+        duration:0.2,
+        scrollTrigger: {
+          trigger:'.mwg_effect005',
+          start:'top top',
+          end:'top top-=1',
+          toggleActions: "play none reverse none"
+        }
+      });
+
+      const paragraph005 = document.querySelector(".mwg_effect005 .paragraph");
+      if (paragraph005) {
+        wrapWordsInSpan(paragraph005);
+      }
+
+      const pinHeight005 = document.querySelector(".mwg_effect005 .pin-height");
+      const container005 = document.querySelector(".mwg_effect005 .container");
+      const words005 = document.querySelectorAll(".mwg_effect005 .word");
+
+      // Only create ScrollTrigger if all required elements exist
+      if (pinHeight005 && container005 && words005.length > 0) {
+        console.log('[Padel Plus] MWG EFFECT 005 elements found, creating ScrollTrigger...');
+        
+        gsap.to(words005, {
+          x: 0,
+          stagger: 0.02,
+          ease: 'power4.inOut',
+          scrollTrigger: {
+            trigger: pinHeight005,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+            pin: container005,
+          }
+        });
+      } else {
+        console.warn('[Padel Plus] MWG EFFECT 005: Missing required elements:', {
+          pinHeight005: !!pinHeight005,
+          container005: !!container005,
+          wordsCount: words005.length
+        });
+      }
+    } else {
+      console.log('[Padel Plus] MWG EFFECT 005 not found on this page');
     }
-
-    gsap.to('.mwg_effect005 .scroll', {
-      autoAlpha:0,
-      duration:0.2,
-      scrollTrigger: {
-        trigger:'.mwg_effect005',
-        start:'top top',
-        end:'top top-=1',
-        toggleActions: "play none reverse none"
-      }
-    });
-
-    const paragraph005 = document.querySelector(".mwg_effect005 .paragraph");
-    wrapWordsInSpan(paragraph005);
-
-    const pinHeight005 = document.querySelector(".mwg_effect005 .pin-height");
-    const container005 = document.querySelector(".mwg_effect005 .container");
-    const words005 = document.querySelectorAll(".mwg_effect005 .word");
-
-    gsap.to(words005, {
-      x: 0,
-      stagger: 0.02,
-      ease: 'power4.inOut',
-      scrollTrigger: {
-        trigger: pinHeight005,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: true,
-        pin: container005,
-      }
-    });
     // === END MWG EFFECT 005 ===
 
     // === GLOWING INTERACTIVE DOTS GRID (Osmo) ===

@@ -37,7 +37,10 @@ Promise.all([
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js'),
   loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js'),
   loadScript('https://cdn.jsdelivr.net/npm/lenis@1.2.3/dist/lenis.min.js'),
-  loadScript('https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js'),
+  loadScript('https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js').catch(err => {
+    console.warn('[Padel Plus] Swiper CDN failed, trying alternative...');
+    return loadScript('https://unpkg.com/swiper@10/swiper-bundle.min.js');
+  }),
   loadScript('https://player.vimeo.com/api/player.js') // Vimeo Player API
 ]).then(() => {
   loadLenisCSS();
@@ -47,6 +50,22 @@ Promise.all([
   console.log('Flip loaded:', !!window.Flip);
   console.log('Lenis loaded:', !!window.Lenis);
   console.log('Swiper loaded:', !!window.Swiper);
+  
+  // If Swiper still isn't loaded, try to load it manually
+  if (!window.Swiper) {
+    console.warn('[Padel Plus] Swiper not loaded via CDN, trying manual load...');
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/swiper@10/swiper-bundle.min.js';
+    script.onload = () => {
+      console.log('[Padel Plus] Swiper loaded manually');
+      window.Swiper = window.Swiper || window.Swiper;
+    };
+    script.onerror = () => {
+      console.error('[Padel Plus] Failed to load Swiper manually');
+    };
+    document.head.appendChild(script);
+  }
+  
   gsap.registerPlugin(ScrollTrigger, Flip);
 
   function runPadelPlusAnimationLogic() {
@@ -762,243 +781,246 @@ Promise.all([
     // === END GLOWING INTERACTIVE DOTS GRID ===
 
     // === 3D CAROUSEL (Swiper Integration) ===
-    console.log('[Padel Plus] Starting 3D Carousel initialization...');
-    
-    // Check if 3D carousel components exist before running
-    const carouselComponents = document.querySelectorAll("[carousel='component']");
-    console.log('[Padel Plus] 3D Carousel: Found', carouselComponents.length, 'carousel components');
-    
-    if (carouselComponents.length > 0) {
-      console.log('[Padel Plus] 3D Carousel components found, initializing...');
-      console.log('[Padel Plus] 3D Carousel: Swiper available:', typeof Swiper !== 'undefined');
-      console.log('[Padel Plus] 3D Carousel: jQuery available:', typeof $ !== 'undefined');
+    // Delay carousel initialization to ensure Swiper is loaded
+    setTimeout(() => {
+      console.log('[Padel Plus] Starting 3D Carousel initialization...');
       
-      // Check if jQuery is available (required for the original code)
-      if (typeof $ === 'undefined') {
-        console.warn('[Padel Plus] 3D Carousel: jQuery not found, using vanilla JS fallback');
-        // Vanilla JS fallback implementation
-        carouselComponents.forEach(function(componentEl, index) {
-          console.log('[Padel Plus] 3D Carousel: Processing component', index + 1);
-          
-          const wrapEl = componentEl.querySelector("[carousel='wrap']");
-          const swiperEl = componentEl.querySelector(".swiper");
-          const nextEl = componentEl.querySelector("[carousel='next']");
-          const prevEl = componentEl.querySelector("[carousel='prev']");
-          
-          console.log('[Padel Plus] 3D Carousel: Elements found:', {
-            wrapEl: !!wrapEl,
-            swiperEl: !!swiperEl,
-            nextEl: !!nextEl,
-            prevEl: !!prevEl
-          });
-          
-          if (!wrapEl || !swiperEl || !nextEl || !prevEl) {
-            console.warn('[Padel Plus] 3D Carousel: Missing required elements', {
+      // Check if 3D carousel components exist before running
+      const carouselComponents = document.querySelectorAll("[carousel='component']");
+      console.log('[Padel Plus] 3D Carousel: Found', carouselComponents.length, 'carousel components');
+      
+      if (carouselComponents.length > 0) {
+        console.log('[Padel Plus] 3D Carousel components found, initializing...');
+        console.log('[Padel Plus] 3D Carousel: Swiper available:', typeof Swiper !== 'undefined');
+        console.log('[Padel Plus] 3D Carousel: jQuery available:', typeof $ !== 'undefined');
+        
+        // Check if jQuery is available (required for the original code)
+        if (typeof $ === 'undefined') {
+          console.warn('[Padel Plus] 3D Carousel: jQuery not found, using vanilla JS fallback');
+          // Vanilla JS fallback implementation
+          carouselComponents.forEach(function(componentEl, index) {
+            console.log('[Padel Plus] 3D Carousel: Processing component', index + 1);
+            
+            const wrapEl = componentEl.querySelector("[carousel='wrap']");
+            const swiperEl = componentEl.querySelector(".swiper");
+            const nextEl = componentEl.querySelector("[carousel='next']");
+            const prevEl = componentEl.querySelector("[carousel='prev']");
+            
+            console.log('[Padel Plus] 3D Carousel: Elements found:', {
               wrapEl: !!wrapEl,
               swiperEl: !!swiperEl,
               nextEl: !!nextEl,
               prevEl: !!prevEl
             });
-            return;
-          }
-          
-          // Get the carousel items - they're in the wrap's first child (the list)
-          const itemEl = wrapEl.querySelector('.w-dyn-items') ? wrapEl.querySelector('.w-dyn-items').children : [];
-          
-          console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'carousel items');
-          
-          if (itemEl.length === 0) {
-            console.warn('[Padel Plus] 3D Carousel: No carousel items found');
-            return;
-          }
-          
-          console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'items');
-          
-          const rotateAmount = 360 / itemEl.length;
-          const zTranslate = 2 * Math.tan((rotateAmount / 2) * (Math.PI / 180));
-          const negTranslate = `calc(var(--3d-carousel-item-width) / -${zTranslate} - var(--3d-carousel-gap))`;
-          const posTranslate = `calc(var(--3d-carousel-item-width) / ${zTranslate} + var(--3d-carousel-gap))`;
-
-          console.log('[Padel Plus] 3D Carousel: Setting up 3D transforms...');
-          wrapEl.style.setProperty("--3d-carousel-z", negTranslate);
-          wrapEl.style.setProperty("perspective", posTranslate);
-
-          itemEl.forEach(function(item, index) {
-            item.style.transform = `rotateY(${rotateAmount * index}deg) translateZ(${posTranslate})`;
-          });
-
-          console.log('[Padel Plus] 3D Carousel: Starting intro animation...');
-          let introTl = gsap.timeline({
-            onComplete: () => {
-              console.log('[Padel Plus] 3D Carousel: Intro animation complete, initializing Swiper...');
-              swiperCode();
-            }
-          });
-          introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
-          introTl.fromTo(wrapEl, { "--3d-carousel-rotate": 100, "--3d-carousel-rotate-x": -90 }, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4, duration: 4, ease: "power2.inOut" }, "<");
-          introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
-
-          function swiperCode() {
-            console.log('[Padel Plus] 3D Carousel: Setting up Swiper...');
-            let tl = gsap.timeline({ paused: true });
-            tl.fromTo(wrapEl, { "--3d-carousel-rotate": 0 }, { "--3d-carousel-rotate": -(360 - rotateAmount), duration: 30, ease: "none" });
-
-            let progress = {
-              value: 0
-            };
-
-            if (typeof Swiper !== 'undefined') {
-              console.log('[Padel Plus] 3D Carousel: Creating Swiper instance...');
-              const swiper = new Swiper(swiperEl, {
-                effect: "creative",
-                creativeEffect: {
-                  prev: {
-                    translate: [0, "-100%", 0],
-                    scale: 0.5,
-                    opacity: 0
-                  },
-                  next: {
-                    translate: [0, "100%", 0],
-                    scale: 0.5,
-                    opacity: 0
-                  }
-                },
-                grabCursor: true,
-                keyboard: true,
-                speed: 500,
-                mousewheel: {
-                  eventsTarget: "[carousel='component']"
-                },
-                navigation: {
-                  nextEl: nextEl,
-                  prevEl: prevEl
-                }
+            
+            if (!wrapEl || !swiperEl || !nextEl || !prevEl) {
+              console.warn('[Padel Plus] 3D Carousel: Missing required elements', {
+                wrapEl: !!wrapEl,
+                swiperEl: !!swiperEl,
+                nextEl: !!nextEl,
+                prevEl: !!prevEl
               });
-              swiper.on("progress", function (e) {
-                console.log('[Padel Plus] 3D Carousel progress:', e.progress);
-                gsap.to(progress, {
-                  value: e.progress,
-                  onUpdate: () => {
-                    tl.progress(progress.value);
+              return;
+            }
+            
+            // Get the carousel items - they're in the wrap's first child (the list)
+            const itemEl = wrapEl.querySelector('.w-dyn-items') ? wrapEl.querySelector('.w-dyn-items').children : [];
+            
+            console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'carousel items');
+            
+            if (itemEl.length === 0) {
+              console.warn('[Padel Plus] 3D Carousel: No carousel items found');
+              return;
+            }
+            
+            console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'items');
+            
+            const rotateAmount = 360 / itemEl.length;
+            const zTranslate = 2 * Math.tan((rotateAmount / 2) * (Math.PI / 180));
+            const negTranslate = `calc(var(--3d-carousel-item-width) / -${zTranslate} - var(--3d-carousel-gap))`;
+            const posTranslate = `calc(var(--3d-carousel-item-width) / ${zTranslate} + var(--3d-carousel-gap))`;
+
+            console.log('[Padel Plus] 3D Carousel: Setting up 3D transforms...');
+            wrapEl.style.setProperty("--3d-carousel-z", negTranslate);
+            wrapEl.style.setProperty("perspective", posTranslate);
+
+            itemEl.forEach(function(item, index) {
+              item.style.transform = `rotateY(${rotateAmount * index}deg) translateZ(${posTranslate})`;
+            });
+
+            console.log('[Padel Plus] 3D Carousel: Starting intro animation...');
+            let introTl = gsap.timeline({
+              onComplete: () => {
+                console.log('[Padel Plus] 3D Carousel: Intro animation complete, initializing Swiper...');
+                swiperCode();
+              }
+            });
+            introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
+            introTl.fromTo(wrapEl, { "--3d-carousel-rotate": 100, "--3d-carousel-rotate-x": -90 }, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4, duration: 4, ease: "power2.inOut" }, "<");
+            introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
+
+            function swiperCode() {
+              console.log('[Padel Plus] 3D Carousel: Setting up Swiper...');
+              let tl = gsap.timeline({ paused: true });
+              tl.fromTo(wrapEl, { "--3d-carousel-rotate": 0 }, { "--3d-carousel-rotate": -(360 - rotateAmount), duration: 30, ease: "none" });
+
+              let progress = {
+                value: 0
+              };
+
+              if (typeof Swiper !== 'undefined') {
+                console.log('[Padel Plus] 3D Carousel: Creating Swiper instance...');
+                const swiper = new Swiper(swiperEl, {
+                  effect: "creative",
+                  creativeEffect: {
+                    prev: {
+                      translate: [0, "-100%", 0],
+                      scale: 0.5,
+                      opacity: 0
+                    },
+                    next: {
+                      translate: [0, "100%", 0],
+                      scale: 0.5,
+                      opacity: 0
+                    }
+                  },
+                  grabCursor: true,
+                  keyboard: true,
+                  speed: 500,
+                  mousewheel: {
+                    eventsTarget: "[carousel='component']"
+                  },
+                  navigation: {
+                    nextEl: nextEl,
+                    prevEl: prevEl
                   }
                 });
-              });
-              console.log('[Padel Plus] 3D Carousel: Swiper initialized successfully');
-            } else {
-              console.warn('[Padel Plus] 3D Carousel: Swiper not loaded');
+                swiper.on("progress", function (e) {
+                  console.log('[Padel Plus] 3D Carousel progress:', e.progress);
+                  gsap.to(progress, {
+                    value: e.progress,
+                    onUpdate: () => {
+                      tl.progress(progress.value);
+                    }
+                  });
+                });
+                console.log('[Padel Plus] 3D Carousel: Swiper initialized successfully');
+              } else {
+                console.warn('[Padel Plus] 3D Carousel: Swiper not loaded');
+              }
             }
-          }
-        });
+          });
+        } else {
+          console.log('[Padel Plus] 3D Carousel: Using jQuery implementation');
+          // Original jQuery implementation
+          $("[carousel='component']").each(function (index) {
+            console.log('[Padel Plus] 3D Carousel: Processing jQuery component', index + 1);
+            
+            let componentEl = $(this);
+            let wrapEl = componentEl.find("[carousel='wrap']");
+            let swiperEl = componentEl.find(".swiper");
+            let nextEl = componentEl.find("[carousel='next']");
+            let prevEl = componentEl.find("[carousel='prev']");
+            
+            console.log('[Padel Plus] 3D Carousel: jQuery elements found:', {
+              wrapEl: wrapEl.length,
+              swiperEl: swiperEl.length,
+              nextEl: nextEl.length,
+              prevEl: prevEl.length
+            });
+            
+            if (wrapEl.length === 0 || swiperEl.length === 0 || nextEl.length === 0 || prevEl.length === 0) {
+              console.warn('[Padel Plus] 3D Carousel: Missing required elements');
+              return;
+            }
+            
+            // Get the carousel items - they're in the wrap's first child (the list)
+            let itemEl = wrapEl.find('.w-dyn-items').children();
+            
+            console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'jQuery carousel items');
+            
+            if (itemEl.length === 0) {
+              console.warn('[Padel Plus] 3D Carousel: No carousel items found');
+              return;
+            }
+            
+            console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'items');
+            
+            let rotateAmount = 360 / itemEl.length;
+            let zTranslate = 2 * Math.tan((rotateAmount / 2) * (Math.PI / 180));
+            let negTranslate = `calc(var(--3d-carousel-item-width) / -${zTranslate} - var(--3d-carousel-gap))`;
+            let posTranslate = `calc(var(--3d-carousel-item-width) / ${zTranslate} + var(--3d-carousel-gap))`;
+
+            wrapEl.css("--3d-carousel-z", negTranslate);
+            wrapEl.css("perspective", posTranslate);
+
+            itemEl.each(function (index) {
+              $(this).css("transform", `rotateY(${rotateAmount * index}deg) translateZ(${posTranslate})`);
+            });
+
+            let introTl = gsap.timeline({
+              onComplete: () => {
+                swiperCode();
+              }
+            });
+            introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
+            introTl.fromTo(wrapEl, { "--3d-carousel-rotate": 100, "--3d-carousel-rotate-x": -90 }, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4, duration: 4, ease: "power2.inOut" }, "<");
+            introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
+
+            function swiperCode() {
+              let tl = gsap.timeline({ paused: true });
+              tl.fromTo(wrapEl, { "--3d-carousel-rotate": 0 }, { "--3d-carousel-rotate": -(360 - rotateAmount), duration: 30, ease: "none" });
+
+              let progress = {
+                value: 0
+              };
+
+              if (typeof Swiper !== 'undefined') {
+                const swiper = new Swiper(swiperEl[0], {
+                  effect: "creative",
+                  creativeEffect: {
+                    prev: {
+                      translate: [0, "-100%", 0],
+                      scale: 0.5,
+                      opacity: 0
+                    },
+                    next: {
+                      translate: [0, "100%", 0],
+                      scale: 0.5,
+                      opacity: 0
+                    }
+                  },
+                  grabCursor: true,
+                  keyboard: true,
+                  speed: 500,
+                  mousewheel: {
+                    eventsTarget: "[carousel='component']"
+                  },
+                  navigation: {
+                    nextEl: nextEl[0],
+                    prevEl: prevEl[0]
+                  }
+                });
+                swiper.on("progress", function (e) {
+                  console.log('[Padel Plus] 3D Carousel progress:', e.progress);
+                  gsap.to(progress, {
+                    value: e.progress,
+                    onUpdate: () => {
+                      tl.progress(progress.value);
+                    }
+                  });
+                });
+                console.log('[Padel Plus] 3D Carousel: Swiper initialized successfully');
+              } else {
+                console.warn('[Padel Plus] 3D Carousel: Swiper not loaded');
+              }
+            }
+          });
+        }
       } else {
-        console.log('[Padel Plus] 3D Carousel: Using jQuery implementation');
-        // Original jQuery implementation
-        $("[carousel='component']").each(function (index) {
-          console.log('[Padel Plus] 3D Carousel: Processing jQuery component', index + 1);
-          
-          let componentEl = $(this);
-          let wrapEl = componentEl.find("[carousel='wrap']");
-          let swiperEl = componentEl.find(".swiper");
-          let nextEl = componentEl.find("[carousel='next']");
-          let prevEl = componentEl.find("[carousel='prev']");
-          
-          console.log('[Padel Plus] 3D Carousel: jQuery elements found:', {
-            wrapEl: wrapEl.length,
-            swiperEl: swiperEl.length,
-            nextEl: nextEl.length,
-            prevEl: prevEl.length
-          });
-          
-          if (wrapEl.length === 0 || swiperEl.length === 0 || nextEl.length === 0 || prevEl.length === 0) {
-            console.warn('[Padel Plus] 3D Carousel: Missing required elements');
-            return;
-          }
-          
-          // Get the carousel items - they're in the wrap's first child (the list)
-          let itemEl = wrapEl.find('.w-dyn-items').children();
-          
-          console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'jQuery carousel items');
-          
-          if (itemEl.length === 0) {
-            console.warn('[Padel Plus] 3D Carousel: No carousel items found');
-            return;
-          }
-          
-          console.log('[Padel Plus] 3D Carousel: Found', itemEl.length, 'items');
-          
-          let rotateAmount = 360 / itemEl.length;
-          let zTranslate = 2 * Math.tan((rotateAmount / 2) * (Math.PI / 180));
-          let negTranslate = `calc(var(--3d-carousel-item-width) / -${zTranslate} - var(--3d-carousel-gap))`;
-          let posTranslate = `calc(var(--3d-carousel-item-width) / ${zTranslate} + var(--3d-carousel-gap))`;
-
-          wrapEl.css("--3d-carousel-z", negTranslate);
-          wrapEl.css("perspective", posTranslate);
-
-          itemEl.each(function (index) {
-            $(this).css("transform", `rotateY(${rotateAmount * index}deg) translateZ(${posTranslate})`);
-          });
-
-          let introTl = gsap.timeline({
-            onComplete: () => {
-              swiperCode();
-            }
-          });
-          introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
-          introTl.fromTo(wrapEl, { "--3d-carousel-rotate": 100, "--3d-carousel-rotate-x": -90 }, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4, duration: 4, ease: "power2.inOut" }, "<");
-          introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
-
-          function swiperCode() {
-            let tl = gsap.timeline({ paused: true });
-            tl.fromTo(wrapEl, { "--3d-carousel-rotate": 0 }, { "--3d-carousel-rotate": -(360 - rotateAmount), duration: 30, ease: "none" });
-
-            let progress = {
-              value: 0
-            };
-
-            if (typeof Swiper !== 'undefined') {
-              const swiper = new Swiper(swiperEl[0], {
-                effect: "creative",
-                creativeEffect: {
-                  prev: {
-                    translate: [0, "-100%", 0],
-                    scale: 0.5,
-                    opacity: 0
-                  },
-                  next: {
-                    translate: [0, "100%", 0],
-                    scale: 0.5,
-                    opacity: 0
-                  }
-                },
-                grabCursor: true,
-                keyboard: true,
-                speed: 500,
-                mousewheel: {
-                  eventsTarget: "[carousel='component']"
-                },
-                navigation: {
-                  nextEl: nextEl[0],
-                  prevEl: prevEl[0]
-                }
-              });
-              swiper.on("progress", function (e) {
-                console.log('[Padel Plus] 3D Carousel progress:', e.progress);
-                gsap.to(progress, {
-                  value: e.progress,
-                  onUpdate: () => {
-                    tl.progress(progress.value);
-                  }
-                });
-              });
-              console.log('[Padel Plus] 3D Carousel: Swiper initialized successfully');
-            } else {
-              console.warn('[Padel Plus] 3D Carousel: Swiper not loaded');
-            }
-          }
-        });
+        console.log('[Padel Plus] 3D Carousel components not found on this page');
       }
-    } else {
-      console.log('[Padel Plus] 3D Carousel components not found on this page');
-    }
+    }, 1000); // 1 second delay to ensure Swiper is loaded
     // === END 3D CAROUSEL ===
   }
 

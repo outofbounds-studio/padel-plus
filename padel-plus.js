@@ -476,6 +476,49 @@ Promise.all([
     });
     // === END MWG EFFECT 003 ===
 
+    // === MWG EFFECT 005 (Pin Height Words Animation) ===
+    // Utility to wrap each word in a span
+    function wrapWordsInSpan(element) {
+      if (!element) return;
+      const text = element.textContent;
+      element.innerHTML = text
+        .split(' ')
+        .map(word => `<span class="word">${word}</span>`)
+        .join(' ');
+    }
+
+    gsap.to('.mwg_effect005 .scroll', {
+      autoAlpha:0,
+      duration:0.2,
+      scrollTrigger: {
+        trigger:'.mwg_effect005',
+        start:'top top',
+        end:'top top-=1',
+        toggleActions: "play none reverse none"
+      }
+    });
+
+    const paragraph005 = document.querySelector(".mwg_effect005 .paragraph");
+    wrapWordsInSpan(paragraph005);
+
+    const pinHeight005 = document.querySelector(".mwg_effect005 .pin-height");
+    const container005 = document.querySelector(".mwg_effect005 .container");
+    const words005 = document.querySelectorAll(".mwg_effect005 .word");
+
+    gsap.to(words005, {
+      x: 0,
+      stagger: 0.02,
+      ease: 'power4.inOut',
+      scrollTrigger: {
+        trigger: pinHeight005,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: true,
+        pin: container005,
+      }
+    });
+    // === END MWG EFFECT 005 ===
+
     // === GLOWING INTERACTIVE DOTS GRID (Osmo) ===
     gsap.registerPlugin(InertiaPlugin);
 

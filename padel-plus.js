@@ -522,7 +522,9 @@ Promise.all([
             start: 'top top',
             end: 'bottom bottom',
             pin: '.mwg_effect003 .container',
-            scrub: true
+            scrub: true,
+            anticipatePin: 1,
+            id: 'mwg003-circles'
           }
         });
 
@@ -540,7 +542,8 @@ Promise.all([
               trigger: pinHeight,
               start: 'top top-=' + (distPerCard) * index,
               end: '+=' + (distPerCard),
-              scrub: true
+              scrub: true,
+              id: `mwg003-circle-${index}`
             }  
           });
           
@@ -554,7 +557,8 @@ Promise.all([
                 trigger: pinHeight,
                 start: 'top top-=' + (distPerCard) * index,
                 end: '+=' + (distPerCard),
-                scrub: true
+                scrub: true,
+                id: `mwg003-card-${index}`
               }  
             });
           }
@@ -620,9 +624,12 @@ Promise.all([
           scrollTrigger: {
             trigger: pinHeight005,
             start: 'top top',
-            end: 'bottom bottom',
+            endTrigger: '[carousel="component"]',
+            end: 'top top',
             scrub: true,
             pin: container005,
+            anticipatePin: 1,
+            id: 'mwg005-words'
           }
         });
       } else {

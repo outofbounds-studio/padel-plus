@@ -580,6 +580,7 @@ Promise.all([
     // === MWG EFFECT 005 (Pin Height Words Animation) ===
     // Check if MWG EFFECT 005 exists before running
     const mwgEffect005 = document.querySelector(".mwg_effect005");
+    const mwgEffect005Section = mwgEffect005.closest('.section');
     if (mwgEffect005) {
       console.log('[Padel Plus] MWG EFFECT 005 found, initializing...');
       
@@ -627,7 +628,7 @@ Promise.all([
             endTrigger: '[carousel="component"]',
             end: 'top top',
             scrub: true,
-            pin: mwgEffect005,
+            pin: mwgEffect005Section,
             anticipatePin: 1,
             id: 'mwg005-words'
           }

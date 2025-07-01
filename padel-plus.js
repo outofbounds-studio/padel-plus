@@ -524,7 +524,8 @@ Promise.all([
             pin: '.mwg_effect003 .container',
             scrub: true,
             anticipatePin: 1,
-            id: 'mwg003-circles'
+            id: 'mwg003-circles',
+            markers: true
           }
         });
 
@@ -630,7 +631,8 @@ Promise.all([
             scrub: true,
             pin: mwgEffect005Section,
             anticipatePin: 1,
-            id: 'mwg005-words'
+            id: 'mwg005-words',
+            markers: true
           }
         });
       } else {
@@ -1068,6 +1070,20 @@ Promise.all([
       }
     }, 1000); // 1 second delay to ensure Swiper is loaded
     // === END 3D CAROUSEL ===
+
+    // Output computed heights for debugging
+    setTimeout(() => {
+      const eff005Section = document.querySelector('.mwg_effect005')?.closest('.section');
+      const swiperSection = document.querySelector('.swiper-section');
+      const eff003Section = document.querySelector('.mwg_effect003')?.closest('.section');
+      const pinHeight003 = document.querySelector('.mwg_effect003 .pin-height');
+      const pinHeight005 = document.querySelector('.mwg_effect005 .pin-height');
+      console.log('[DEBUG HEIGHTS] .section (mwg_effect005):', eff005Section?.offsetHeight);
+      console.log('[DEBUG HEIGHTS] .swiper-section:', swiperSection?.offsetHeight);
+      console.log('[DEBUG HEIGHTS] .section (mwg_effect003):', eff003Section?.offsetHeight);
+      console.log('[DEBUG HEIGHTS] .mwg_effect003 .pin-height:', pinHeight003?.offsetHeight);
+      console.log('[DEBUG HEIGHTS] .mwg_effect005 .pin-height:', pinHeight005?.offsetHeight);
+    }, 1500);
   }
 
   if (document.readyState === 'loading') {

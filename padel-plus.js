@@ -611,7 +611,7 @@ Promise.all([
         wrapWordsInSpan(paragraph005);
       }
 
-      const pinHeight005 = document.querySelector(".mwg_effect005 .pin-height");
+      const pinHeight005 = document.querySelector(".mwg_effect005 .pin-height-005");
       const container005 = document.querySelector(".mwg_effect005 .container");
       const words005 = document.querySelectorAll(".mwg_effect005 .word");
 
@@ -626,10 +626,10 @@ Promise.all([
           scrollTrigger: {
             trigger: pinHeight005,
             start: 'top top',
-            endTrigger: '[carousel="component"]',
+            endTrigger: '.swiper-section',
             end: 'top top',
             scrub: true,
-            pin: mwgEffect005Section,
+            pin: pinHeight005,
             anticipatePin: 1,
             id: 'mwg005-words',
             markers: true

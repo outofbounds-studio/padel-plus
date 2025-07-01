@@ -627,7 +627,7 @@ Promise.all([
             endTrigger: '[carousel="component"]',
             end: 'top top',
             scrub: true,
-            pin: container005,
+            pin: mwgEffect005,
             anticipatePin: 1,
             id: 'mwg005-words'
           }

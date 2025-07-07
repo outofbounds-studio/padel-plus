@@ -492,6 +492,45 @@ Promise.all([
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
       
+      // Function to calculate optimal timing for both effects
+      function calculateEffectTiming() {
+        const swiperSection = document.querySelector('.swiper-section');
+        const mwgEffect005 = document.querySelector(".mwg_effect005");
+        
+        if (!swiperSection) {
+          console.warn('[Padel Plus] No swiper section found for timing calculation');
+          return { mwg003End: 'bottom bottom', mwg005End: 'top top' };
+        }
+        
+        // Wait for next frame to ensure all elements are positioned
+        return new Promise((resolve) => {
+          requestAnimationFrame(() => {
+            const swiperRect = swiperSection.getBoundingClientRect();
+            const mwg003Rect = mwgEffect003.getBoundingClientRect();
+            const mwg005Rect = mwgEffect005 ? mwgEffect005.getBoundingClientRect() : null;
+            
+            // Calculate available space for each effect
+            const spaceBeforeSwiper = swiperRect.top - mwg003Rect.bottom;
+            const spaceAfterSwiper = mwg005Rect ? mwg005Rect.top - swiperRect.bottom : 0;
+            
+            console.log('[Padel Plus] Timing calculation:', {
+              spaceBeforeSwiper,
+              spaceAfterSwiper,
+              swiperHeight: swiperRect.height,
+              mwg003Height: mwg003Rect.height,
+              mwg005Height: mwg005Rect ? mwg005Rect.height : 'N/A'
+            });
+            
+            const result = {
+              mwg003End: spaceBeforeSwiper > 100 ? `bottom-=${Math.min(spaceBeforeSwiper * 0.3, 50)} bottom` : 'bottom bottom',
+              mwg005End: spaceAfterSwiper > 100 ? `top+=${Math.min(spaceAfterSwiper * 0.3, 50)} top` : 'top top'
+            };
+            
+            resolve(result);
+          });
+        });
+      }
+      
       gsap.to('.mwg_effect003 .scroll', {
         autoAlpha:0,
         duration:0.2,
@@ -512,6 +551,17 @@ Promise.all([
       if (pinHeight && circles.length > 0 && circlesContainer && container) {
         console.log('[Padel Plus] MWG EFFECT 003 elements found, creating ScrollTrigger...');
         
+        // Use the timing calculation function with a small delay to ensure DOM is ready
+        setTimeout(async () => {
+          const timing = await calculateEffectTiming();
+          const endPoint = timing.mwg003End;
+          
+          console.log('[Padel Plus] MWG003 timing:', {
+            endPoint,
+            pinHeightHeight: pinHeight.clientHeight,
+            circlesCount: circles.length
+          });
+
         gsap.fromTo('.mwg_effect003 .circles', {
           y: '5%'
         }, {
@@ -519,8 +569,8 @@ Promise.all([
           ease: 'none',
           scrollTrigger: {
             trigger: pinHeight,
-            start: 'top top',
-            end: 'bottom bottom',
+            start: 'top center', // Start when pin-height reaches center of viewport
+            end: endPoint,
             pin: '.mwg_effect003 .container',
             scrub: true,
             anticipatePin: 1,
@@ -533,7 +583,9 @@ Promise.all([
             halfRange = (circles.length - 1) * angle / 2,
             rot = -halfRange;
 
-        const distPerCard = (pinHeight.clientHeight - window.innerHeight) / circles.length;
+        // Calculate animation distance based on available space
+        const availableHeight = pinHeight.clientHeight;
+        const distPerCard = availableHeight / circles.length;
 
         circles.forEach((circle, index) => {
           gsap.to(circle, {
@@ -541,8 +593,8 @@ Promise.all([
             ease: 'power1.out',
             scrollTrigger: {
               trigger: pinHeight,
-              start: 'top top-=' + (distPerCard) * index,
-              end: '+=' + (distPerCard),
+              start: 'top center-=' + (distPerCard * index * 0.5), // Stagger the start points
+              end: 'top center+=' + (distPerCard * 0.8), // Shorter animation duration
               scrub: true,
               id: `mwg003-circle-${index}`
             }  
@@ -556,8 +608,8 @@ Promise.all([
               ease: 'power1.out',
               scrollTrigger: {
                 trigger: pinHeight,
-                start: 'top top-=' + (distPerCard) * index,
-                end: '+=' + (distPerCard),
+                start: 'top center-=' + (distPerCard * index * 0.5),
+                end: 'top center+=' + (distPerCard * 0.8),
                 scrub: true,
                 id: `mwg003-card-${index}`
               }  
@@ -565,6 +617,7 @@ Promise.all([
           }
           rot += angle;
         });
+        }, 100); // Close the setTimeout
       } else {
         console.warn('[Padel Plus] MWG EFFECT 003: Missing required elements:', {
           pinHeight: !!pinHeight,
@@ -619,6 +672,19 @@ Promise.all([
       if (pinHeight005 && container005 && words005.length > 0) {
         console.log('[Padel Plus] MWG EFFECT 005 elements found, creating ScrollTrigger...');
         
+        // Use the timing calculation function with a small delay to ensure DOM is ready
+        setTimeout(async () => {
+          const timing = await calculateEffectTiming();
+          const endPoint005 = timing.mwg005End;
+          const endTrigger005 = pinHeight005; // Use pinHeight as end trigger for smoother transition
+          
+          console.log('[Padel Plus] MWG005 timing:', {
+            endPoint005,
+            endTrigger005: endTrigger005 ? 'pinHeight005' : 'swiper-section',
+            pinHeight005Height: pinHeight005.clientHeight,
+            wordsCount: words005.length
+          });
+
         gsap.to(words005, {
           x: 0,
           stagger: 0.02,
@@ -626,15 +692,32 @@ Promise.all([
           scrollTrigger: {
             trigger: pinHeight005,
             start: 'top top',
-            endTrigger: '.swiper-section',
-            end: 'top top',
+            endTrigger: endTrigger005,
+            end: endPoint005,
             scrub: true,
             pin: pinHeight005,
             anticipatePin: 1,
             id: 'mwg005-words',
-            markers: true
+            markers: true,
+            onLeave: () => {
+              // Smooth transition when leaving the pin
+              gsap.to(pinHeight005, {
+                opacity: 0.8,
+                duration: 0.3,
+                ease: 'power2.out'
+              });
+            },
+            onEnterBack: () => {
+              // Restore opacity when entering back
+              gsap.to(pinHeight005, {
+                opacity: 1,
+                duration: 0.3,
+                ease: 'power2.out'
+              });
+            }
           }
         });
+        }, 100); // Close the setTimeout
       } else {
         console.warn('[Padel Plus] MWG EFFECT 005: Missing required elements:', {
           pinHeight005: !!pinHeight005,

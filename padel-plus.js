@@ -929,6 +929,11 @@ Promise.all([
 
             console.log('[Padel Plus] 3D Carousel: Starting intro animation...');
             let introTl = gsap.timeline({
+              scrollTrigger: {
+                trigger: '.swiper-section',
+                start: 'top 80%',
+                once: true
+              },
               onComplete: () => {
                 console.log('[Padel Plus] 3D Carousel: Intro animation complete, initializing Swiper...');
                 swiperCode();
@@ -1038,6 +1043,11 @@ Promise.all([
             });
 
             let introTl = gsap.timeline({
+              scrollTrigger: {
+                trigger: '.swiper-section',
+                start: 'top 80%',
+                once: true
+              },
               onComplete: () => {
                 swiperCode();
               }

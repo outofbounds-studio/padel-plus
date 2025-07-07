@@ -524,77 +524,20 @@ Promise.all([
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
       
-      // Only create ScrollTrigger if all required elements exist
-      if (pinHeight && circles.length > 0 && circlesContainer && container) {
-        console.log('[Padel Plus] MWG EFFECT 003 elements found, creating ScrollTrigger...');
-        
-        // MWG003: Pin after carousel, animate, then unpin
-        gsap.fromTo('.mwg_effect003 .circles', {
-          y: '5%'
-        }, {
-          y: '-5%',
-          ease: 'none',
-          scrollTrigger: {
-            trigger: pinHeight,
-            start: 'top bottom', // When MWG003 top hits bottom of carousel
-            end: 'bottom top',   // When MWG003 bottom hits top of viewport
-            pin: '.mwg_effect003 .container',
-            scrub: true,
-            anticipatePin: 1,
-            id: 'mwg003-circles',
-            markers: true,
-            onUpdate: () => {
-              console.log('[Padel Plus] MWG003 animation updating');
-            }
+      // DEBUG: Simple background color animation to confirm ScrollTrigger is working
+      gsap.to(pinHeight, {
+        backgroundColor: 'red',
+        scrollTrigger: {
+          trigger: pinHeight,
+          start: 'top 80%',
+          end: 'bottom 20%',
+          scrub: true,
+          markers: true,
+          onUpdate: () => {
+            console.log('[Padel Plus] MWG003 animation updating');
           }
-        });
-
-        let angle = 3, 
-            halfRange = (circles.length - 1) * angle / 2,
-            rot = -halfRange;
-
-        // Calculate animation distance based on available space
-        const availableHeight = pinHeight.clientHeight;
-        const distPerCard = availableHeight / circles.length;
-
-        circles.forEach((circle, index) => {
-          gsap.to(circle, {
-            rotation: rot,
-            ease: 'power1.out',
-            scrollTrigger: {
-              trigger: pinHeight,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: true,
-              id: `mwg003-circle-${index}`
-            }  
-          });
-          
-          const card = circle.querySelector('.card');
-          if (card) {
-            gsap.to(card, {
-              rotation: rot,
-              y: '-50%',
-              ease: 'power1.out',
-              scrollTrigger: {
-                trigger: pinHeight,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: true,
-                id: `mwg003-card-${index}`
-              }  
-            });
-          }
-          rot += angle;
-        });
-      } else {
-        console.warn('[Padel Plus] MWG EFFECT 003: Missing required elements:', {
-          pinHeight: !!pinHeight,
-          circlesCount: circles.length,
-          circlesContainer: !!circlesContainer,
-          container: !!container
-        });
-      }
+        }
+      });
     } else {
       console.log('[Padel Plus] MWG EFFECT 003 not found on this page');
     }

@@ -531,37 +531,53 @@ Promise.all([
     const mwgEffect003 = document.querySelector(".mwg_effect003");
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
-      // Restore the original circles fan animation for MWG003
       if (pinHeight && circles.length > 0) {
-        gsap.to(circles, {
-          x: (i) => 200 * Math.cos((i / circles.length) * Math.PI * 2),
-          y: (i) => 200 * Math.sin((i / circles.length) * Math.PI * 2),
-          scale: 1.5,
-          rotation: 360,
-          stagger: 0.1,
-          ease: 'power2.inOut',
+        // Pin the container and animate the circles wrapper
+        gsap.fromTo('.mwg_effect003 .circles', {
+          y: '5%'
+        }, {
+          y: '-5%',
+          ease: 'none',
           scrollTrigger: {
             trigger: pinHeight,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true,
-            markers: true,
-            onUpdate: () => {
-              console.log('[Padel Plus] MWG003 circles fan animation updating');
-            },
-            onEnter: () => {
-              console.log('[Padel Plus] MWG003 onEnter');
-            },
-            onLeave: () => {
-              console.log('[Padel Plus] MWG003 onLeave');
-            },
-            onEnterBack: () => {
-              console.log('[Padel Plus] MWG003 onEnterBack');
-            },
-            onLeaveBack: () => {
-              console.log('[Padel Plus] MWG003 onLeaveBack');
-            }
+            start: 'top top',
+            end: 'bottom bottom',
+            pin: '.mwg_effect003 .container',
+            scrub: true
           }
+        });
+
+        // Fan out the circles/cards
+        let angle = 3,
+            halfRange = (circles.length - 1) * angle / 2,
+            rot = -halfRange;
+        const distPerCard = (pinHeight.clientHeight - window.innerHeight) / circles.length;
+        circles.forEach((circle, index) => {
+          gsap.to(circle, {
+            rotation: rot,
+            ease: 'power1.out',
+            scrollTrigger: {
+              trigger: pinHeight,
+              start: 'top top-=' + (distPerCard) * index,
+              end: '+=' + (distPerCard),
+              scrub: true
+            }
+          });
+          const card = circle.querySelector('.card');
+          if (card) {
+            gsap.to(card, {
+              rotation: rot,
+              y: '-50%',
+              ease: 'power1.out',
+              scrollTrigger: {
+                trigger: pinHeight,
+                start: 'top top-=' + (distPerCard) * index,
+                end: '+=' + (distPerCard),
+                scrub: true
+              }
+            });
+          }
+          rot += angle;
         });
       }
     } else {

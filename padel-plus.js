@@ -542,7 +542,10 @@ Promise.all([
             scrub: true,
             anticipatePin: 1,
             id: 'mwg003-circles',
-            markers: true
+            markers: true,
+            onUpdate: () => {
+              console.log('[Padel Plus] MWG003 animation updating');
+            }
           }
         });
 

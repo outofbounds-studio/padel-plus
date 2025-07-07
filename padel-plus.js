@@ -531,8 +531,8 @@ Promise.all([
         backgroundColor: 'red',
         scrollTrigger: {
           trigger: pinHeight,
-          start: 'top center',
-          end: 'bottom center',
+          start: 'top 80%',
+          end: 'bottom 20%',
           scrub: true,
           markers: true,
           onUpdate: () => {
@@ -1068,6 +1068,16 @@ Promise.all([
       console.log('[DEBUG HEIGHTS] .mwg_effect003 .pin-height:', pinHeight003?.offsetHeight);
       console.log('[DEBUG HEIGHTS] .mwg_effect005 .pin-height:', pinHeight005?.offsetHeight);
     }, 1500);
+
+    // At the end of runPadelPlusAnimationLogic, add:
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (window.ScrollTrigger) {
+          window.ScrollTrigger.refresh(true);
+          console.log('[Padel Plus] ScrollTrigger refreshed after load');
+        }
+      }, 200);
+    });
   }
 
   if (document.readyState === 'loading') {

@@ -523,7 +523,9 @@ Promise.all([
     const mwgEffect003 = document.querySelector(".mwg_effect003");
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
-      
+      // INSTRUCTION: Ensure there is a large spacer above MWG003 in your HTML, e.g.:
+      // <div class="mwg003-spacer" style="height: 100vh;"></div>
+      // <section class="section mwg_effect003">...</section>
       // DEBUG: Animate from white to red for visible transition and add ScrollTrigger callback logs
       gsap.fromTo(pinHeight, {
         backgroundColor: 'white'
@@ -531,7 +533,7 @@ Promise.all([
         backgroundColor: 'red',
         scrollTrigger: {
           trigger: pinHeight,
-          start: 'top bottom',
+          start: 'top bottom', // Viewport-relative triggers for visibility
           end: 'bottom top',
           scrub: true,
           markers: true,
@@ -560,10 +562,13 @@ Promise.all([
     // === MWG EFFECT 005 (Pin Height Words Animation) ===
     // Check if MWG EFFECT 005 exists before running
     const mwgEffect005 = document.querySelector(".mwg_effect005");
-    const mwgEffect005Section = mwgEffect005.closest('.section');
+    const mwgEffect005Section = mwgEffect005?.closest('.section');
     if (mwgEffect005) {
       console.log('[Padel Plus] MWG EFFECT 005 found, initializing...');
-      
+      // INSTRUCTION: Ensure there is a spacer or the carousel section immediately after MWG005 in your HTML, e.g.:
+      // <section class="section mwg_effect005">...</section>
+      // <div class="mwg005-spacer" style="height: 100vh;"></div>
+      // <section class="swiper-section">...</section>
       // Utility to wrap each word in a span
       function wrapWordsInSpan(element) {
         if (!element) return;
@@ -573,7 +578,6 @@ Promise.all([
           .map(word => `<span class="word">${word}</span>`)
           .join(' ');
       }
-
       gsap.to('.mwg_effect005 .scroll', {
         autoAlpha:0,
         duration:0.2,
@@ -584,20 +588,16 @@ Promise.all([
           toggleActions: "play none reverse none"
         }
       });
-
       const paragraph005 = document.querySelector(".mwg_effect005 .paragraph");
       if (paragraph005) {
         wrapWordsInSpan(paragraph005);
       }
-
       const pinHeight005 = document.querySelector(".mwg_effect005 .pin-height-005");
       const container005 = document.querySelector(".mwg_effect005 .container");
       const words005 = document.querySelectorAll(".mwg_effect005 .word");
-
       // Only create ScrollTrigger if all required elements exist
       if (pinHeight005 && container005 && words005.length > 0) {
         console.log('[Padel Plus] MWG EFFECT 005 elements found, creating ScrollTrigger...');
-        
         // MWG005: Pin, animate, finish, then unpin before carousel
         gsap.to(words005, {
           x: 0,
@@ -606,15 +606,21 @@ Promise.all([
           scrollTrigger: {
             trigger: pinHeight005,
             start: 'top top',
-            endTrigger: '.swiper-section',
-            end: 'bottom top', // When MWG005 bottom hits carousel top
+            endTrigger: '.mwg005-spacer', // Use the spacer as endTrigger
+            end: 'top top', // When MWG005 top hits spacer top
             scrub: true,
             pin: pinHeight005,
             anticipatePin: 1,
             id: 'mwg005-words',
             markers: true,
+            onUpdate: (self) => {
+              console.log('[Padel Plus] MWG005 animation updating', self.progress);
+            },
+            onEnter: () => {
+              console.log('[Padel Plus] MWG005 onEnter');
+            },
             onLeave: () => {
-              // Smooth transition when leaving the pin
+              console.log('[Padel Plus] MWG005 onLeave (unpinning)');
               gsap.to(pinHeight005, {
                 opacity: 0.8,
                 duration: 0.3,
@@ -622,12 +628,15 @@ Promise.all([
               });
             },
             onEnterBack: () => {
-              // Restore opacity when entering back
+              console.log('[Padel Plus] MWG005 onEnterBack (re-pinning)');
               gsap.to(pinHeight005, {
                 opacity: 1,
                 duration: 0.3,
                 ease: 'power2.out'
               });
+            },
+            onLeaveBack: () => {
+              console.log('[Padel Plus] MWG005 onLeaveBack');
             }
           }
         });

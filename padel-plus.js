@@ -542,7 +542,7 @@ Promise.all([
             trigger: pinHeight,
             start: 'top top',
             end: 'bottom bottom',
-            pin: '.mwg_effect003 .container',
+            pin: pinHeight,
             scrub: true
           }
         });

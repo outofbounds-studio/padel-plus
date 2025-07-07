@@ -524,19 +524,31 @@ Promise.all([
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
       
-      // DEBUG: Animate from white to red for visible transition
+      // DEBUG: Animate from white to red for visible transition and add ScrollTrigger callback logs
       gsap.fromTo(pinHeight, {
         backgroundColor: 'white'
       }, {
         backgroundColor: 'red',
         scrollTrigger: {
           trigger: pinHeight,
-          start: 'top 80%',
-          end: 'bottom 20%',
+          start: 'top bottom',
+          end: 'bottom top',
           scrub: true,
           markers: true,
           onUpdate: () => {
             console.log('[Padel Plus] MWG003 animation updating');
+          },
+          onEnter: () => {
+            console.log('[Padel Plus] MWG003 onEnter');
+          },
+          onLeave: () => {
+            console.log('[Padel Plus] MWG003 onLeave');
+          },
+          onEnterBack: () => {
+            console.log('[Padel Plus] MWG003 onEnterBack');
+          },
+          onLeaveBack: () => {
+            console.log('[Padel Plus] MWG003 onLeaveBack');
           }
         }
       });
@@ -1076,7 +1088,7 @@ Promise.all([
           window.ScrollTrigger.refresh(true);
           console.log('[Padel Plus] ScrollTrigger refreshed after load');
         }
-      }, 200);
+      }, 500);
     });
   }
 

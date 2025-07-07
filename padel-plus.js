@@ -355,6 +355,44 @@ Promise.all([
       });
     }
 
+    // Smooth background color transition for body on review section (mwg003)
+    const mwg003Section = document.querySelector('.mwg_effect003');
+    if (mwg003Section) {
+      ScrollTrigger.create({
+        trigger: mwg003Section,
+        start: 'top 60%',
+        end: 'bottom 60%',
+        onEnter: () => {
+          gsap.to('body', {
+            backgroundColor: '#1a1a1a',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        },
+        onLeaveBack: () => {
+          gsap.to('body', {
+            backgroundColor: '#f9f9f9',
+            duration: 0.1,
+            ease: 'power2.out'
+          });
+        },
+        onLeave: () => {
+          gsap.to('body', {
+            backgroundColor: '#f9f9f9',
+            duration: 0.1,
+            ease: 'power2.out'
+          });
+        },
+        onEnterBack: () => {
+          gsap.to('body', {
+            backgroundColor: '#1a1a1a',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        }
+      });
+    }
+
     // Toggle nav button color based on section background using ScrollTrigger only
     const btnBg = document.querySelector('.button-color-tennis_bg');
     const btnText = document.querySelector('.button-color-tennis_text');

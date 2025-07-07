@@ -482,7 +482,10 @@ Promise.all([
         absolute: true,
         scale: true,
         onStart: () => courts.style.zIndex = 10,
-        onComplete: () => courts.style.zIndex = ""
+        onComplete: () => {
+          courts.style.zIndex = "";
+          ScrollTrigger.refresh(true);
+        }
       });
     }
 
@@ -507,7 +510,10 @@ Promise.all([
         absolute: true,
         scale: true,
         onStart: () => courts.style.zIndex = 10,
-        onComplete: () => courts.style.zIndex = ""
+        onComplete: () => {
+          courts.style.zIndex = "";
+          ScrollTrigger.refresh(true);
+        }
       });
     }
 

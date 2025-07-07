@@ -91,12 +91,44 @@ Promise.all([
   gsap.registerPlugin(ScrollTrigger, Flip);
 
   function runPadelPlusAnimationLogic() {
-    console.log('[Padel Plus] DOMContentLoaded, running animation logic');
+    console.log('[Padel Plus] runPadelPlusAnimationLogic called');
     // LENIS SMOOTH SCROLL (OPTIONAL)
     window.lenis = new Lenis({
       autoRaf: true,
     });
     console.log('[Padel Plus] Lenis instance created:', window.lenis);
+
+    // MWG003 Debug
+    console.log('[Padel Plus] Checking for .mwg_effect003...');
+    const mwgEffect003Debug = document.querySelector('.mwg_effect003');
+    if (mwgEffect003Debug) {
+      console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
+      const pinHeight = document.querySelector('.mwg_effect003 .pin-height');
+      const circles = document.querySelectorAll('.mwg_effect003 .circle');
+      const circlesContainer = document.querySelector('.mwg_effect003 .circles');
+      const container = document.querySelector('.mwg_effect003 .container');
+      console.log('[Padel Plus] MWG003 elements:', { pinHeight, circlesLength: circles.length, circlesContainer, container });
+    } else {
+      console.log('[Padel Plus] MWG EFFECT 003 not found on this page');
+    }
+
+    // MWG005 Debug
+    console.log('[Padel Plus] Checking for .mwg_effect005...');
+    const mwgEffect005Debug = document.querySelector('.mwg_effect005');
+    if (mwgEffect005Debug) {
+      console.log('[Padel Plus] MWG EFFECT 005 found, initializing...');
+      const pinHeight005 = document.querySelector('.mwg_effect005 .pin-height-005');
+      const container005 = document.querySelector('.mwg_effect005 .container');
+      const words005 = document.querySelectorAll('.mwg_effect005 .word');
+      console.log('[Padel Plus] MWG005 elements:', { pinHeight005, container005, wordsCount: words005.length });
+    } else {
+      console.log('[Padel Plus] MWG EFFECT 005 not found on this page');
+    }
+
+    // Dots grid debug
+    console.log('[Padel Plus] Checking for [data-dots-container-init]...');
+    const dotsContainers = document.querySelectorAll('[data-dots-container-init]');
+    console.log('[Padel Plus] Dots grid containers found:', dotsContainers.length);
 
     // Scroll-To Anchor Lenis
     function initScrollToAnchorLenis() {

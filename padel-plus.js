@@ -531,37 +531,39 @@ Promise.all([
     const mwgEffect003 = document.querySelector(".mwg_effect003");
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
-      // INSTRUCTION: Ensure there is a large spacer above MWG003 in your HTML, e.g.:
-      // <div class="mwg003-spacer" style="height: 100vh;"></div>
-      // <section class="section mwg_effect003">...</section>
-      // DEBUG: Animate from white to red for visible transition and add ScrollTrigger callback logs
-      gsap.fromTo(pinHeight, {
-        backgroundColor: 'white'
-      }, {
-        backgroundColor: 'red',
-        scrollTrigger: {
-          trigger: pinHeight,
-          start: 'top bottom', // Viewport-relative triggers for visibility
-          end: 'bottom top',
-          scrub: true,
-          markers: true,
-          onUpdate: () => {
-            console.log('[Padel Plus] MWG003 animation updating');
-          },
-          onEnter: () => {
-            console.log('[Padel Plus] MWG003 onEnter');
-          },
-          onLeave: () => {
-            console.log('[Padel Plus] MWG003 onLeave');
-          },
-          onEnterBack: () => {
-            console.log('[Padel Plus] MWG003 onEnterBack');
-          },
-          onLeaveBack: () => {
-            console.log('[Padel Plus] MWG003 onLeaveBack');
+      // Restore the original circles fan animation for MWG003
+      if (pinHeight && circles.length > 0) {
+        gsap.to(circles, {
+          x: (i) => 200 * Math.cos((i / circles.length) * Math.PI * 2),
+          y: (i) => 200 * Math.sin((i / circles.length) * Math.PI * 2),
+          scale: 1.5,
+          rotation: 360,
+          stagger: 0.1,
+          ease: 'power2.inOut',
+          scrollTrigger: {
+            trigger: pinHeight,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+            markers: true,
+            onUpdate: () => {
+              console.log('[Padel Plus] MWG003 circles fan animation updating');
+            },
+            onEnter: () => {
+              console.log('[Padel Plus] MWG003 onEnter');
+            },
+            onLeave: () => {
+              console.log('[Padel Plus] MWG003 onLeave');
+            },
+            onEnterBack: () => {
+              console.log('[Padel Plus] MWG003 onEnterBack');
+            },
+            onLeaveBack: () => {
+              console.log('[Padel Plus] MWG003 onLeaveBack');
+            }
           }
-        }
-      });
+        });
+      }
     } else {
       console.log('[Padel Plus] MWG EFFECT 003 not found on this page');
     }

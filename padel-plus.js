@@ -524,13 +524,15 @@ Promise.all([
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
       
-      // DEBUG: Simple background color animation to confirm ScrollTrigger is working
-      gsap.to(pinHeight, {
+      // DEBUG: Animate from white to red for visible transition
+      gsap.fromTo(pinHeight, {
+        backgroundColor: 'white'
+      }, {
         backgroundColor: 'red',
         scrollTrigger: {
           trigger: pinHeight,
-          start: 'top 80%',
-          end: 'bottom 20%',
+          start: 'top center',
+          end: 'bottom center',
           scrub: true,
           markers: true,
           onUpdate: () => {

@@ -102,6 +102,7 @@ Promise.all([
     console.log('[Padel Plus] Checking for .mwg_effect003...');
     const mwgEffect003Debug = document.querySelector('.mwg_effect003');
     const pinHeight = document.querySelector('.mwg_effect003 .pin-height');
+    console.log('[Padel Plus] MWG003 pinHeight:', pinHeight);
     const circles = document.querySelectorAll('.mwg_effect003 .circle');
     const circlesContainer = document.querySelector('.mwg_effect003 .circles');
     const container = document.querySelector('.mwg_effect003 .container');
@@ -116,6 +117,7 @@ Promise.all([
     console.log('[Padel Plus] Checking for .mwg_effect005...');
     const mwgEffect005Debug = document.querySelector('.mwg_effect005');
     const pinHeight005 = document.querySelector('.mwg_effect005 .pin-height-005');
+    console.log('[Padel Plus] MWG005 pinHeight005:', pinHeight005);
     const container005 = document.querySelector('.mwg_effect005 .container');
     const words005 = document.querySelectorAll('.mwg_effect005 .word');
     if (mwgEffect005Debug) {

@@ -1760,7 +1760,15 @@ function initSlideShow(el) {
     target: el,
     type: 'wheel,touch,pointer',
     onLeft: () => { if (!animating) navigate(1); },
-    onRight: () => {if (!animating) navigate(-1); },
+    onRight: () => { if (!animating) navigate(-1); },
+    onChangeX: (delta) => {
+      if (animating) return;
+      if (delta > 30) {
+        navigate(-1);
+      } else if (delta < -30) {
+        navigate(1);
+      }
+    },
     onWheel: (event) => {
       if (animating) return;
       if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
@@ -1771,8 +1779,8 @@ function initSlideShow(el) {
         }
       }
     },
-    wheelSpeed: -1,
-    tolerance: 10
+    tolerance: 2,
+    preventDefault: true
   });
   return {
     destroy: function() {

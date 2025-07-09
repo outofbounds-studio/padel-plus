@@ -1800,3 +1800,80 @@ function initParallaxImageGalleryThumbnails() {
 document.addEventListener('DOMContentLoaded', () => {
   initParallaxImageGalleryThumbnails();
 }); 
+
+// === MASKED TEXT REVEAL (GSAP SplitText) ===
+(function() {
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) return resolve();
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+  Promise.all([
+    loadScript('https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js'),
+    loadScript('https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js'),
+    loadScript('https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js')
+  ]).then(() => {
+    if (window.gsap && window.ScrollTrigger && window.SplitText) {
+      gsap.registerPlugin(SplitText, ScrollTrigger);
+      const splitConfig = {
+        lines: { duration: 0.8, stagger: 0.08 },
+        words: { duration: 0.6, stagger: 0.06 },
+        chars: { duration: 0.4, stagger: 0.01 }
+      };
+      function initMaskTextScrollReveal() {
+        document.querySelectorAll('[data-split="heading"]').forEach(heading => {
+          // Reset CSS visibility here:
+          gsap.set(heading, { autoAlpha: 1 });
+          // Find the split type, the default is 'lines'
+          const type = heading.dataset.splitReveal || 'lines';
+          const typesToSplit =
+            type === 'lines' ? ['lines'] :
+            type === 'words' ? ['lines','words'] :
+            ['lines','words','chars'];
+          // Split the text
+          SplitText.create(heading, {
+            type: typesToSplit.join(', '),
+            mask: 'lines',
+            autoSplit: true,
+            linesClass: 'line',
+            wordsClass: 'word',
+            charsClass: 'letter',
+            onSplit: function(instance) {
+              const targets = instance[type];
+              const config = splitConfig[type];
+              return gsap.from(targets, {
+                yPercent: 110,
+                duration: config.duration,
+                stagger: config.stagger,
+                ease: 'expo.out',
+                scrollTrigger: {
+                  trigger: heading,
+                  start: 'clamp(top 80%)',
+                  once: true
+                }
+              });
+            }
+          });
+        });
+      }
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(initMaskTextScrollReveal);
+      } else {
+        document.addEventListener('DOMContentLoaded', initMaskTextScrollReveal);
+      }
+    }
+  });
+  // Add CSS for initial visibility and Webflow Designer compatibility
+  const style = document.createElement('style');
+  style.textContent = `
+    [data-split="heading"] { visibility: hidden; }
+    .wf-design-mode [data-split="heading"],
+    .w-editor [data-split="heading"] { visibility: visible !important; }
+  `;
+  document.head.appendChild(style);
+})(); 

@@ -1882,12 +1882,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-  // Add CSS for initial visibility and Webflow Designer compatibility
-  const style = document.createElement('style');
-  style.textContent = `
-    [data-split="heading"] { visibility: hidden; }
-    .wf-design-mode [data-split="heading"],
-    .w-editor [data-split="heading"] { visibility: visible !important; }
-  `;
-  document.head.appendChild(style);
 })(); 

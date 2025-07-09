@@ -1868,7 +1868,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 );
               }
               if (isInViewport(heading)) {
-                setTimeout(() => tween.play(), 300);
+                setTimeout(() => tween.play(), 500); // 300ms + 200ms extra delay
               }
               return tween;
             }

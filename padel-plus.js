@@ -1846,17 +1846,31 @@ document.addEventListener('DOMContentLoaded', () => {
             onSplit: function(instance) {
               const targets = instance[type];
               const config = splitConfig[type];
-              return gsap.from(targets, {
+              // Create the tween, but don't animate immediately
+              const tween = gsap.from(targets, {
                 yPercent: 110,
                 duration: config.duration,
                 stagger: config.stagger,
                 ease: 'expo.out',
                 scrollTrigger: {
                   trigger: heading,
-                  start: 'clamp(top 80%)',
-                  once: true
+                  start: 'top 80%',
+                  once: true,
+                  immediateRender: false
                 }
               });
+              // Fallback: If the heading is already in view on page load, play the animation
+              function isInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                  rect.top < window.innerHeight &&
+                  rect.bottom > 0
+                );
+              }
+              if (isInViewport(heading)) {
+                setTimeout(() => tween.play(), 300);
+              }
+              return tween;
             }
           });
         });

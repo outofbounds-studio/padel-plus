@@ -5,18 +5,18 @@
 
 console.log('[Padel Plus] Script loaded (top of file)');
 
-// Register GSAP plugins if available (assume loaded in <head>)
-if (window.gsap && window.ScrollTrigger) {
-  gsap.registerPlugin(ScrollTrigger);
-}
-if (window.gsap && window.SplitText) {
-  gsap.registerPlugin(SplitText);
-}
-if (window.gsap && window.Observer) {
-  gsap.registerPlugin(Observer);
-}
-if (window.gsap && window.CustomEase) {
-  gsap.registerPlugin(CustomEase);
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) {
+      console.log(`[Padel Plus] Script already present: ${src}`);
+      return resolve();
+    }
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => { console.log(`[Padel Plus] Loaded script: ${src}`); resolve(); };
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
 }
 
 function loadLenisCSS() {

@@ -2037,3 +2037,34 @@ function initMarqueeScrollDirection() {
 document.addEventListener('DOMContentLoaded', () => {
   initMarqueeScrollDirection();
 }); 
+
+// === MAP MODAL LOGIC ===
+function closeAllMapModals() {
+  document.querySelectorAll('.map-modal.open').forEach(modal => {
+    modal.classList.remove('open');
+  });
+}
+
+document.querySelectorAll('.blob-wrapper').forEach(blob => {
+  blob.addEventListener('click', function(e) {
+    e.stopPropagation();
+    closeAllMapModals();
+    const location = this.dataset.location;
+    const modal = document.querySelector('.map-modal.' + location);
+    if (modal) modal.classList.add('open');
+  });
+});
+
+document.querySelectorAll('.map-modal .close-modal').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    this.closest('.map-modal').classList.remove('open');
+  });
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.map-modal') && !e.target.closest('.blob-wrapper')) {
+    closeAllMapModals();
+  }
+});
+// === END MAP MODAL LOGIC ===

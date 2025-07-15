@@ -452,9 +452,10 @@ Promise.all([
     if (
       window.location.pathname === '/' ||
       window.location.pathname === '/index.html' ||
-      window.location.pathname === '/home'
+      window.location.pathname === '/home' ||
+      window.location.pathname === '/contact'
     ) {
-      console.log('[VimeoBG] Forcing initVimeoBGVideo call (homepage)');
+      console.log('[VimeoBG] Forcing initVimeoBGVideo call (homepage or contact)');
       initVimeoBGVideo();
     }
 

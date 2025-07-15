@@ -503,8 +503,11 @@ Promise.all([
       const courts = document.querySelector('[data-flip-id="courts"]');
       const largeContainer = document.querySelector('.courts-image-large[data-flip-container="courts"]');
       if (!courts || !largeContainer) return;
+      console.log('[Flip Debug] moveCourtsToLarge - BEFORE Flip.getState:', courts.offsetWidth, courts.offsetHeight, courts);
       const state = Flip.getState(courts);
+      console.log('[Flip Debug] moveCourtsToLarge - AFTER Flip.getState:', courts.offsetWidth, courts.offsetHeight, courts);
       largeContainer.appendChild(courts);
+      console.log('[Flip Debug] moveCourtsToLarge - AFTER appendChild:', courts.offsetWidth, courts.offsetHeight, courts);
 
       // Animate out the plus and text
       gsap.to(['.img-link-text.flip', '.img-link-plus.flip'], {
@@ -531,8 +534,11 @@ Promise.all([
       const courts = document.querySelector('[data-flip-id="courts"]');
       const smallContainer = document.querySelector('.courts-image-small[data-flip-container="courts"]');
       if (!courts || !smallContainer) return;
+      console.log('[Flip Debug] moveCourtsToSmall - BEFORE Flip.getState:', courts.offsetWidth, courts.offsetHeight, courts);
       const state = Flip.getState(courts);
+      console.log('[Flip Debug] moveCourtsToSmall - AFTER Flip.getState:', courts.offsetWidth, courts.offsetHeight, courts);
       smallContainer.appendChild(courts);
+      console.log('[Flip Debug] moveCourtsToSmall - AFTER appendChild:', courts.offsetWidth, courts.offsetHeight, courts);
 
       // Animate in the plus and text
       gsap.to(['.img-link-text.flip', '.img-link-plus.flip'], {

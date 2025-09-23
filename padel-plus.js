@@ -670,13 +670,18 @@ Promise.all([
       if (pinHeight005 && container005 && words005.length > 0) {
         console.log('[Padel Plus] MWG EFFECT 005 elements found, creating ScrollTrigger...');
         // MWG005: Pin, animate, finish, then unpin before carousel
+        // Calculate dynamic top offset based on viewport height for better spacing on shorter screens
+        const viewportHeight = window.innerHeight;
+        const topOffset = viewportHeight < 800 ? 'top+=100px top' : viewportHeight < 1000 ? 'top+=50px top' : 'top top';
+        console.log('[Padel Plus] MWG005 viewport height:', viewportHeight, 'using start offset:', topOffset);
+        
         gsap.to(words005, {
           x: 0,
           stagger: 0.02,
           ease: 'power4.inOut',
           scrollTrigger: {
             trigger: pinHeight005,
-            start: 'top top',
+            start: topOffset,
             endTrigger: '.mwg005-spacer', // Use the spacer as endTrigger
             end: 'top top', // When MWG005 top hits spacer top
             scrub: true,

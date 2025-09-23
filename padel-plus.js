@@ -676,7 +676,7 @@ Promise.all([
           ease: 'power4.inOut',
           scrollTrigger: {
             trigger: pinHeight005,
-            start: 'top top',
+            start: 'top+=100px top', // Add 100px space above the text
             endTrigger: '.mwg005-spacer', // Use the spacer as endTrigger
             end: 'bottom top', // When spacer bottom hits viewport top (longer animation)
             scrub: true,

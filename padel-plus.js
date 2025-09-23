@@ -678,7 +678,7 @@ Promise.all([
             trigger: pinHeight005,
             start: 'top top',
             endTrigger: '.mwg005-spacer', // Use the spacer as endTrigger
-            end: 'top top', // When MWG005 top hits spacer top
+            end: 'bottom top', // When spacer bottom hits viewport top (longer animation)
             scrub: true,
             pin: pinHeight005,
             anticipatePin: 1,

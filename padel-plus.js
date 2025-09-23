@@ -683,7 +683,7 @@ Promise.all([
             pin: pinHeight005,
             anticipatePin: 1,
             id: 'mwg005-words',
-            markers: true,
+            markers: false,
             onUpdate: (self) => {
               console.log('[Padel Plus] MWG005 animation updating', self.progress);
             },

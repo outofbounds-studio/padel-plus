@@ -589,30 +589,47 @@ Promise.all([
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper
-        // For homepage, use a much shorter end point since pinHeight is too tall
-        const endPointAdjusted = isHomepage ? 'bottom 80%' : endPoint;
+        // For homepage, find the next section after MWG003 and use it as endTrigger
+        let scrollTriggerConfig;
         
-        console.log('[Padel Plus] MWG003 ScrollTrigger config:', {
-          trigger: pinHeight,
-          endPoint: endPointAdjusted,
-          isHomepage: isHomepage,
-          pinHeightHeight: pinHeight?.offsetHeight
-        });
+        if (isHomepage) {
+          // Find the next section after MWG003 for homepage
+          const mwg003Element = document.querySelector('.mwg_effect003');
+          const nextSection = mwg003Element?.parentElement?.nextElementSibling;
+          
+          console.log('[Padel Plus] Homepage MWG003 - Next section:', nextSection?.className);
+          
+          scrollTriggerConfig = {
+            trigger: pinHeight,
+            start: 'top top',
+            endTrigger: nextSection,
+            end: 'top top',
+            pin: '.mwg_effect003 .container',
+            scrub: true,
+            markers: true,
+            id: 'mwg003-circles'
+          };
+        } else {
+          // Use original config for other pages
+          scrollTriggerConfig = {
+            trigger: pinHeight,
+            start: 'top top',
+            end: endPoint,
+            pin: '.mwg_effect003 .container',
+            scrub: true,
+            markers: true,
+            id: 'mwg003-circles'
+          };
+        }
+        
+        console.log('[Padel Plus] MWG003 ScrollTrigger config:', scrollTriggerConfig);
         
         gsap.fromTo('.mwg_effect003 .circles', {
           y: '5%'
         }, {
           y: '-5%',
           ease: 'none',
-          scrollTrigger: {
-            trigger: pinHeight,
-            start: 'top top',
-            end: endPointAdjusted,
-            pin: '.mwg_effect003 .container',
-            scrub: true,
-            markers: true,
-            id: 'mwg003-circles'
-          }
+          scrollTrigger: scrollTriggerConfig
         });
 
         // Fan out the circles/cards

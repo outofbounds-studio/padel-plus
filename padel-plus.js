@@ -606,7 +606,7 @@ Promise.all([
             end: 'top top',
             pin: '.mwg_effect003 .container',
             scrub: true,
-            markers: true,
+            markers: false,
             id: 'mwg003-circles'
           };
         } else {
@@ -617,7 +617,7 @@ Promise.all([
             end: endPoint,
             pin: '.mwg_effect003 .container',
             scrub: true,
-            markers: true,
+            markers: false,
             id: 'mwg003-circles'
           };
         }
@@ -646,7 +646,7 @@ Promise.all([
               start: 'top top-=' + (distPerCard) * index,
               end: '+=' + (distPerCard),
               scrub: true,
-              markers: true,
+              markers: false,
               id: `mwg003-circle-${index}`
             }
           });
@@ -661,7 +661,7 @@ Promise.all([
                 start: 'top top-=' + (distPerCard) * index,
                 end: '+=' + (distPerCard),
                 scrub: true,
-                markers: true,
+                markers: false,
                 id: `mwg003-card-${index}`
               }
             });

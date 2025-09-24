@@ -589,13 +589,11 @@ Promise.all([
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper
-        // Use different end trigger for homepage vs other pages
-        const endTrigger = isHomepage ? '.swiper-section' : pinHeight;
-        const endPointAdjusted = isHomepage ? 'top top' : endPoint;
+        // For homepage, use a shorter end point to prevent overly long animation
+        const endPointAdjusted = isHomepage ? 'bottom 20%' : endPoint;
         
         console.log('[Padel Plus] MWG003 ScrollTrigger config:', {
           trigger: pinHeight,
-          endTrigger: endTrigger,
           endPoint: endPointAdjusted,
           isHomepage: isHomepage
         });
@@ -608,7 +606,6 @@ Promise.all([
           scrollTrigger: {
             trigger: pinHeight,
             start: 'top top',
-            endTrigger: endTrigger,
             end: endPointAdjusted,
             pin: '.mwg_effect003 .container',
             scrub: true,

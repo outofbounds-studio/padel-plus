@@ -584,9 +584,8 @@ Promise.all([
           window.location.pathname === '/home'
         );
         
-        // Use different end points for homepage vs other pages
-        // Homepage needs different timing due to different content structure
-        const endPoint = isHomepage ? 'bottom top' : 'bottom bottom';
+        // Use same end point as other pages - same component structure
+        const endPoint = 'bottom bottom';
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper
@@ -643,6 +642,20 @@ Promise.all([
           rot += angle;
         });
         
+        // Debug: Check what comes after MWG003 on different pages
+        setTimeout(() => {
+          const mwg003Section = document.querySelector('.mwg_effect003')?.closest('.section');
+          const nextSection = mwg003Section?.nextElementSibling;
+          console.log('[Padel Plus] MWG003 Debug - Page:', window.location.pathname);
+          console.log('[Padel Plus] MWG003 Section height:', mwg003Section?.offsetHeight);
+          console.log('[Padel Plus] Next section after MWG003:', nextSection?.className, nextSection?.offsetHeight);
+          console.log('[Padel Plus] All sections after MWG003:', 
+            Array.from(document.querySelectorAll('.section')).slice(
+              Array.from(document.querySelectorAll('.section')).indexOf(mwg003Section) + 1
+            ).map(s => ({ className: s.className, height: s.offsetHeight }))
+          );
+        }, 2000);
+
         // Homepage-specific ScrollTrigger refresh to fix timing issues
         if (isHomepage) {
           setTimeout(() => {

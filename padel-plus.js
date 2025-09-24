@@ -644,16 +644,31 @@ Promise.all([
         
         // Debug: Check what comes after MWG003 on different pages
         setTimeout(() => {
-          const mwg003Section = document.querySelector('.mwg_effect003')?.closest('.section');
+          const mwg003Element = document.querySelector('.mwg_effect003');
+          const mwg003Section = mwg003Element?.closest('.section');
           const nextSection = mwg003Section?.nextElementSibling;
           console.log('[Padel Plus] MWG003 Debug - Page:', window.location.pathname);
+          console.log('[Padel Plus] MWG003 Element found:', !!mwg003Element);
+          console.log('[Padel Plus] MWG003 Element parent:', mwg003Element?.parentElement?.className);
+          console.log('[Padel Plus] MWG003 Section found:', !!mwg003Section);
           console.log('[Padel Plus] MWG003 Section height:', mwg003Section?.offsetHeight);
           console.log('[Padel Plus] Next section after MWG003:', nextSection?.className, nextSection?.offsetHeight);
-          console.log('[Padel Plus] All sections after MWG003:', 
-            Array.from(document.querySelectorAll('.section')).slice(
-              Array.from(document.querySelectorAll('.section')).indexOf(mwg003Section) + 1
-            ).map(s => ({ className: s.className, height: s.offsetHeight }))
-          );
+          
+          // Check all sections on the page
+          const allSections = document.querySelectorAll('.section');
+          console.log('[Padel Plus] All sections on page:', Array.from(allSections).map(s => ({ 
+            className: s.className, 
+            height: s.offsetHeight,
+            containsMWG003: s.contains(mwg003Element)
+          })));
+          
+          if (mwg003Section) {
+            console.log('[Padel Plus] All sections after MWG003:', 
+              Array.from(document.querySelectorAll('.section')).slice(
+                Array.from(document.querySelectorAll('.section')).indexOf(mwg003Section) + 1
+              ).map(s => ({ className: s.className, height: s.offsetHeight }))
+            );
+          }
         }, 2000);
 
         // Homepage-specific ScrollTrigger refresh to fix timing issues

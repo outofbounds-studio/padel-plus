@@ -3,7 +3,7 @@
  * 
  */
 
-console.log('[Padel Plus] Script loaded (top of file)');
+console.log('[Padel Plus] Script loaded (top of file) - Version 39');
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -1286,7 +1286,7 @@ Promise.all([
 (function() {
     'use strict';
     
-    console.log('[Padel Plus] Script loaded (top of file)');
+    console.log('[Padel Plus] Script loaded (top of file) - Version 39');
     
     // Configuration
     const CONFIG = {

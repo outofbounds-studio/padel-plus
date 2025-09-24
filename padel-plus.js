@@ -584,8 +584,8 @@ Promise.all([
           window.location.pathname === '/home'
         );
         
-        // Use different end points for homepage vs other pages
-        const endPoint = isHomepage ? 'bottom 20%' : 'bottom bottom';
+        // Use same end point as other pages but add refresh delay for homepage
+        const endPoint = 'bottom bottom';
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper
@@ -641,6 +641,14 @@ Promise.all([
           }
           rot += angle;
         });
+        
+        // Homepage-specific ScrollTrigger refresh to fix timing issues
+        if (isHomepage) {
+          setTimeout(() => {
+            ScrollTrigger.refresh();
+            console.log('[Padel Plus] MWG003 ScrollTrigger refreshed for homepage');
+          }, 1000);
+        }
       }
     } else {
       console.log('[Padel Plus] MWG EFFECT 003 not found on this page');

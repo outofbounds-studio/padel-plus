@@ -584,8 +584,9 @@ Promise.all([
           window.location.pathname === '/home'
         );
         
-        // Use same end point as other pages but add refresh delay for homepage
-        const endPoint = 'bottom bottom';
+        // Use different end points for homepage vs other pages
+        // Homepage needs different timing due to different content structure
+        const endPoint = isHomepage ? 'bottom top' : 'bottom bottom';
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper

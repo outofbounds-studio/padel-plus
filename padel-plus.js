@@ -589,13 +589,14 @@ Promise.all([
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper
-        // For homepage, use a shorter end point to prevent overly long animation
-        const endPointAdjusted = isHomepage ? 'bottom 20%' : endPoint;
+        // For homepage, use a much shorter end point since pinHeight is too tall
+        const endPointAdjusted = isHomepage ? 'bottom 80%' : endPoint;
         
         console.log('[Padel Plus] MWG003 ScrollTrigger config:', {
           trigger: pinHeight,
           endPoint: endPointAdjusted,
-          isHomepage: isHomepage
+          isHomepage: isHomepage,
+          pinHeightHeight: pinHeight?.offsetHeight
         });
         
         gsap.fromTo('.mwg_effect003 .circles', {
@@ -663,6 +664,7 @@ Promise.all([
           console.log('[Padel Plus] MWG003 Element parent:', mwg003Element?.parentElement?.className);
           console.log('[Padel Plus] MWG003 Section found:', !!mwg003Section);
           console.log('[Padel Plus] MWG003 Container height:', mwg003Container?.offsetHeight);
+          console.log('[Padel Plus] MWG003 pinHeight height:', pinHeight?.offsetHeight);
           console.log('[Padel Plus] Next element after MWG003:', nextElement?.className, nextElement?.offsetHeight);
           
           // Check all sections on the page

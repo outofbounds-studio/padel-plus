@@ -599,7 +599,9 @@ Promise.all([
             start: 'top top',
             end: endPoint,
             pin: '.mwg_effect003 .container',
-            scrub: true
+            scrub: true,
+            markers: true,
+            id: 'mwg003-circles'
           }
         });
 
@@ -616,7 +618,9 @@ Promise.all([
               trigger: pinHeight,
               start: 'top top-=' + (distPerCard) * index,
               end: '+=' + (distPerCard),
-              scrub: true
+              scrub: true,
+              markers: true,
+              id: `mwg003-circle-${index}`
             }
           });
           const card = circle.querySelector('.card');
@@ -629,7 +633,9 @@ Promise.all([
                 trigger: pinHeight,
                 start: 'top top-=' + (distPerCard) * index,
                 end: '+=' + (distPerCard),
-                scrub: true
+                scrub: true,
+                markers: true,
+                id: `mwg003-card-${index}`
               }
             });
           }

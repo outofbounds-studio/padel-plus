@@ -1997,6 +1997,7 @@ function loadInertiaPlugin() {
       if (window.InertiaPlugin) {
         gsap.registerPlugin(InertiaPlugin);
         console.log('[Padel Plus] InertiaPlugin loaded and registered');
+        console.log('[Padel Plus] InertiaPlugin registered with GSAP:', !!gsap.InertiaPlugin);
         resolve();
       } else {
         reject(new Error('InertiaPlugin not available after loading'));
@@ -2017,9 +2018,9 @@ function initMomentumBasedHover() {
     return;
   }
   
-  // Check if InertiaPlugin is available
-  if (!window.InertiaPlugin) {
-    console.warn('[Padel Plus] InertiaPlugin not available, using fallback momentum hover');
+  // Check if InertiaPlugin is available AND registered with GSAP
+  if (!window.InertiaPlugin || !gsap.InertiaPlugin) {
+    console.warn('[Padel Plus] InertiaPlugin not available or not registered, using fallback momentum hover');
     initMomentumBasedHoverFallback();
     return;
   }

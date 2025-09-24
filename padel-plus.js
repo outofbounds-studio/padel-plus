@@ -1982,14 +1982,40 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })(); 
 
-// Register InertiaPlugin for momentum-based hover
-if (window.gsap && window.InertiaPlugin) {
-  gsap.registerPlugin(InertiaPlugin);
+// Load InertiaPlugin for momentum-based hover
+function loadInertiaPlugin() {
+  return new Promise((resolve, reject) => {
+    if (window.InertiaPlugin) {
+      gsap.registerPlugin(InertiaPlugin);
+      resolve();
+      return;
+    }
+    
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/InertiaPlugin.min.js';
+    script.onload = () => {
+      if (window.InertiaPlugin) {
+        gsap.registerPlugin(InertiaPlugin);
+        console.log('[Padel Plus] InertiaPlugin loaded and registered');
+        resolve();
+      } else {
+        reject(new Error('InertiaPlugin not available after loading'));
+      }
+    };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
 }
 
 function initMomentumBasedHover() {
   // If this device can't hover with a fine pointer, stop here
   if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {return;}
+  
+  // Check if InertiaPlugin is available
+  if (!window.InertiaPlugin) {
+    console.warn('[Padel Plus] InertiaPlugin not available for momentum hover');
+    return;
+  }
   // Configuration (tweak these for feel)
   const xyMultiplier       = 30;  // multiplies pointer velocity for x/y movement
   const rotationMultiplier = 20;  // multiplies normalized torque for rotation speed
@@ -2048,7 +2074,16 @@ function initMomentumBasedHover() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  initMomentumBasedHover();
+  // Load InertiaPlugin first, then initialize momentum hover
+  loadInertiaPlugin()
+    .then(() => {
+      initMomentumBasedHover();
+    })
+    .catch((error) => {
+      console.warn('[Padel Plus] Failed to load InertiaPlugin:', error);
+      // Try to initialize anyway in case it's already loaded
+      initMomentumBasedHover();
+    });
 }); 
 
 function initMarqueeScrollDirection() {

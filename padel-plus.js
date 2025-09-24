@@ -2008,8 +2008,14 @@ function loadInertiaPlugin() {
 }
 
 function initMomentumBasedHover() {
+  console.log('[Padel Plus] initMomentumBasedHover called');
+  console.log('[Padel Plus] InertiaPlugin available:', !!window.InertiaPlugin);
+  
   // If this device can't hover with a fine pointer, stop here
-  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {return;}
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    console.log('[Padel Plus] Device does not support hover, skipping momentum hover');
+    return;
+  }
   
   // Check if InertiaPlugin is available
   if (!window.InertiaPlugin) {
@@ -2017,6 +2023,8 @@ function initMomentumBasedHover() {
     initMomentumBasedHoverFallback();
     return;
   }
+  
+  console.log('[Padel Plus] Using InertiaPlugin for momentum hover');
   
   // Configuration (tweak these for feel)
   const xyMultiplier       = 30;  // multiplies pointer velocity for x/y movement

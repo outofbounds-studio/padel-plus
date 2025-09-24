@@ -589,6 +589,17 @@ Promise.all([
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper
+        // Use different end trigger for homepage vs other pages
+        const endTrigger = isHomepage ? '.swiper-section' : pinHeight;
+        const endPointAdjusted = isHomepage ? 'top top' : endPoint;
+        
+        console.log('[Padel Plus] MWG003 ScrollTrigger config:', {
+          trigger: pinHeight,
+          endTrigger: endTrigger,
+          endPoint: endPointAdjusted,
+          isHomepage: isHomepage
+        });
+        
         gsap.fromTo('.mwg_effect003 .circles', {
           y: '5%'
         }, {
@@ -597,7 +608,8 @@ Promise.all([
           scrollTrigger: {
             trigger: pinHeight,
             start: 'top top',
-            end: endPoint,
+            endTrigger: endTrigger,
+            end: endPointAdjusted,
             pin: '.mwg_effect003 .container',
             scrub: true,
             markers: true,
@@ -646,13 +658,15 @@ Promise.all([
         setTimeout(() => {
           const mwg003Element = document.querySelector('.mwg_effect003');
           const mwg003Section = mwg003Element?.closest('.section');
-          const nextSection = mwg003Section?.nextElementSibling;
+          const mwg003Container = mwg003Element?.parentElement; // Use actual parent instead of section
+          const nextElement = mwg003Container?.nextElementSibling;
+          
           console.log('[Padel Plus] MWG003 Debug - Page:', window.location.pathname);
           console.log('[Padel Plus] MWG003 Element found:', !!mwg003Element);
           console.log('[Padel Plus] MWG003 Element parent:', mwg003Element?.parentElement?.className);
           console.log('[Padel Plus] MWG003 Section found:', !!mwg003Section);
-          console.log('[Padel Plus] MWG003 Section height:', mwg003Section?.offsetHeight);
-          console.log('[Padel Plus] Next section after MWG003:', nextSection?.className, nextSection?.offsetHeight);
+          console.log('[Padel Plus] MWG003 Container height:', mwg003Container?.offsetHeight);
+          console.log('[Padel Plus] Next element after MWG003:', nextElement?.className, nextElement?.offsetHeight);
           
           // Check all sections on the page
           const allSections = document.querySelectorAll('.section');
@@ -662,12 +676,19 @@ Promise.all([
             containsMWG003: s.contains(mwg003Element)
           })));
           
-          if (mwg003Section) {
-            console.log('[Padel Plus] All sections after MWG003:', 
-              Array.from(document.querySelectorAll('.section')).slice(
-                Array.from(document.querySelectorAll('.section')).indexOf(mwg003Section) + 1
-              ).map(s => ({ className: s.className, height: s.offsetHeight }))
-            );
+          // Check what comes after MWG003 container
+          if (mwg003Container) {
+            const siblingsAfter = [];
+            let nextSibling = mwg003Container.nextElementSibling;
+            while (nextSibling && siblingsAfter.length < 3) {
+              siblingsAfter.push({
+                className: nextSibling.className,
+                height: nextSibling.offsetHeight,
+                tagName: nextSibling.tagName
+              });
+              nextSibling = nextSibling.nextElementSibling;
+            }
+            console.log('[Padel Plus] Elements after MWG003 container:', siblingsAfter);
           }
         }, 2000);
 

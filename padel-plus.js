@@ -358,7 +358,46 @@ Promise.all([
     // Smooth background color transition for body on review section (mwg003)
     const mwg003Section = document.querySelector('.mwg_effect003');
     if (mwg003Section) {
-      ScrollTrigger.create({
+      // Use same timing as MWG003 animation for homepage
+      const isHomepage = (
+        window.location.pathname === '/' ||
+        window.location.pathname === '/index.html' ||
+        window.location.pathname === '/home'
+      );
+      
+      const bgConfig = isHomepage ? {
+        trigger: mwg003Section,
+        start: 'top top',
+        end: '+=2000', // Match MWG003 animation length
+        onEnter: () => {
+          gsap.to('body', {
+            backgroundColor: '#1a1a1a',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        },
+        onLeave: () => {
+          gsap.to('body', {
+            backgroundColor: '#f9f9f9',
+            duration: 0.1,
+            ease: 'power2.out'
+          });
+        },
+        onLeaveBack: () => {
+          gsap.to('body', {
+            backgroundColor: '#f9f9f9',
+            duration: 0.1,
+            ease: 'power2.out'
+          });
+        },
+        onEnterBack: () => {
+          gsap.to('body', {
+            backgroundColor: '#1a1a1a',
+            duration: 0.3,
+            ease: 'power2.out'
+          });
+        }
+      } : {
         trigger: mwg003Section,
         start: 'top 60%',
         end: 'bottom 60%',
@@ -390,7 +429,9 @@ Promise.all([
             ease: 'power2.out'
           });
         }
-      });
+      };
+      
+      ScrollTrigger.create(bgConfig);
     }
 
     // Toggle nav button color based on section background using ScrollTrigger only
@@ -593,17 +634,12 @@ Promise.all([
         let scrollTriggerConfig;
         
         if (isHomepage) {
-          // Find the next section after MWG003 for homepage
-          const mwg003Element = document.querySelector('.mwg_effect003');
-          const nextSection = mwg003Element?.parentElement?.nextElementSibling;
-          
-          console.log('[Padel Plus] Homepage MWG003 - Next section:', nextSection?.className);
-          
+          // For homepage, use a fixed pixel value to control animation length precisely
+          // This ensures consistent timing with background color changes
           scrollTriggerConfig = {
             trigger: pinHeight,
             start: 'top top',
-            endTrigger: nextSection,
-            end: 'top top',
+            end: '+=2000', // Fixed 2000px animation length
             pin: '.mwg_effect003 .container',
             scrub: true,
             markers: true,

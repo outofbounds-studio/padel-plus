@@ -1982,28 +1982,50 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 })(); 
 
+// Load InertiaPlugin dynamically
+function loadInertiaPlugin() {
+  return new Promise((resolve, reject) => {
+    if (window.InertiaPlugin) {
+      gsap.registerPlugin(InertiaPlugin);
+      resolve();
+      return;
+    }
+    
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/InertiaPlugin.min.js';
+    script.onload = () => {
+      if (window.InertiaPlugin) {
+        gsap.registerPlugin(InertiaPlugin);
+        console.log('[Padel Plus] InertiaPlugin loaded and registered');
+        resolve();
+      } else {
+        reject(new Error('InertiaPlugin not available after loading'));
+      }
+    };
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
 function initMomentumBasedHover() {
   // If this device can't hover with a fine pointer, stop here
   if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) {return;}
   
-  // Check if InertiaPlugin is available, if not use fallback implementation
-  if (!window.InertiaPlugin) {
-    console.warn('[Padel Plus] InertiaPlugin not available, using fallback momentum hover');
-    initMomentumBasedHoverFallback();
-    return;
-  }
   // Configuration (tweak these for feel)
   const xyMultiplier       = 30;  // multiplies pointer velocity for x/y movement
   const rotationMultiplier = 20;  // multiplies normalized torque for rotation speed
   const inertiaResistance  = 200; // higher = stops sooner
+
   // Pre-build clamp functions for performance
   const clampXY  = gsap.utils.clamp(-1080, 1080);
   const clampRot = gsap.utils.clamp(-60, 60);
+
   // Initialize each root container
   document.querySelectorAll('[data-momentum-hover-init]').forEach(root => {
     let prevX = 0, prevY = 0;
     let velX  = 0, velY  = 0;
     let rafId = null;
+
     // Track pointer velocity (throttled to RAF)
     root.addEventListener('mousemove', e => {
       if (rafId) return;
@@ -2015,26 +2037,32 @@ function initMomentumBasedHover() {
         rafId = null;
       });
     });
+
     // Attach hover inertia to each child element
     root.querySelectorAll('[data-momentum-hover-element]').forEach(el => {
       el.addEventListener('mouseenter', e => {
         const target = el.querySelector('[data-momentum-hover-target]');
         if (!target) return;
+
         // Compute offset from center to pointer
         const { left, top, width, height } = target.getBoundingClientRect();
         const centerX = left + width / 2;
         const centerY = top + height / 2;
         const offsetX = e.clientX - centerX;
         const offsetY = e.clientY - centerY;
+
         // Compute raw torque (px²/frame)
         const rawTorque = offsetX * velY - offsetY * velX;
+
         // Normalize torque so rotation ∝ pointer speed (deg/sec)
         const leverDist    = Math.hypot(offsetX, offsetY) || 1;
         const angularForce = rawTorque / leverDist;
+
         // Calculate and clamp velocities
         const velocityX        = clampXY(velX * xyMultiplier);
         const velocityY        = clampXY(velY * xyMultiplier);
         const rotationVelocity = clampRot(angularForce * rotationMultiplier);
+
         // Apply GSAP inertia tween
         gsap.to(target, {
           inertia: {
@@ -2049,69 +2077,18 @@ function initMomentumBasedHover() {
   });
 }
 
-// Fallback momentum hover implementation without InertiaPlugin
-function initMomentumBasedHoverFallback() {
-  console.log('[Padel Plus] Using fallback momentum hover implementation');
-  
-  document.querySelectorAll('[data-momentum-hover-init]').forEach(root => {
-    let prevX = 0, prevY = 0;
-    let velX = 0, velY = 0;
-    let rafId = null;
-    
-    // Track pointer velocity
-    root.addEventListener('mousemove', e => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        velX = e.clientX - prevX;
-        velY = e.clientY - prevY;
-        prevX = e.clientX;
-        prevY = e.clientY;
-        rafId = null;
-      });
-    });
-    
-    // Attach hover effects to each child element
-    root.querySelectorAll('[data-momentum-hover-element]').forEach(el => {
-      el.addEventListener('mouseenter', e => {
-        const target = el.querySelector('[data-momentum-hover-target]');
-        if (!target) return;
-        
-        // Calculate offset from center to pointer
-        const { left, top, width, height } = target.getBoundingClientRect();
-        const centerX = left + width / 2;
-        const centerY = top + height / 2;
-        const offsetX = e.clientX - centerX;
-        const offsetY = e.clientY - centerY;
-        
-        // Calculate velocities with multipliers
-        const velocityX = Math.max(-1080, Math.min(1080, velX * 30));
-        const velocityY = Math.max(-1080, Math.min(1080, velY * 30));
-        const rotationVelocity = Math.max(-60, Math.min(60, (offsetX * velY - offsetY * velX) / Math.hypot(offsetX, offsetY) * 20));
-        
-        // Apply fallback animation using regular GSAP
-        gsap.to(target, {
-          x: velocityX * 0.1,
-          y: velocityY * 0.1,
-          rotation: rotationVelocity * 0.1,
-          duration: 0.3,
-          ease: "power2.out",
-          onComplete: () => {
-            gsap.to(target, {
-              x: 0,
-              y: 0,
-              rotation: 0,
-              duration: 1.5,
-              ease: "elastic.out(1,0.75)"
-            });
-          }
-        });
-      });
-    });
-  });
-}
 
 document.addEventListener("DOMContentLoaded", () => {
-  initMomentumBasedHover();
+  // Load InertiaPlugin first, then initialize momentum hover
+  loadInertiaPlugin()
+    .then(() => {
+      initMomentumBasedHover();
+    })
+    .catch((error) => {
+      console.warn('[Padel Plus] Failed to load InertiaPlugin:', error);
+      // Try to initialize anyway in case it's already loaded
+      initMomentumBasedHover();
+    });
 }); 
 
 function initMarqueeScrollDirection() {

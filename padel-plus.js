@@ -577,6 +577,17 @@ Promise.all([
     if (mwgEffect003) {
       console.log('[Padel Plus] MWG EFFECT 003 found, initializing...');
       if (pinHeight && circles.length > 0) {
+        // Homepage-specific MWG003 configuration to prevent conflicts with other ScrollTriggers
+        const isHomepage = (
+          window.location.pathname === '/' ||
+          window.location.pathname === '/index.html' ||
+          window.location.pathname === '/home'
+        );
+        
+        // Use different end points for homepage vs other pages
+        const endPoint = isHomepage ? 'bottom 80%' : 'bottom bottom';
+        console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
+        
         // Pin the container and animate the circles wrapper
         gsap.fromTo('.mwg_effect003 .circles', {
           y: '5%'
@@ -586,7 +597,7 @@ Promise.all([
           scrollTrigger: {
             trigger: pinHeight,
             start: 'top top',
-            end: 'bottom bottom',
+            end: endPoint,
             pin: '.mwg_effect003 .container',
             scrub: true
           }

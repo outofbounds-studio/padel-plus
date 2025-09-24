@@ -585,7 +585,7 @@ Promise.all([
         );
         
         // Use different end points for homepage vs other pages
-        const endPoint = isHomepage ? 'bottom 80%' : 'bottom bottom';
+        const endPoint = isHomepage ? 'bottom 20%' : 'bottom bottom';
         console.log('[Padel Plus] MWG003 end point:', endPoint, 'isHomepage:', isHomepage);
         
         // Pin the container and animate the circles wrapper

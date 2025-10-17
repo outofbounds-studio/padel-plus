@@ -2734,11 +2734,11 @@ function initMobileNavbarScrollAnimation() {
   let isScrolling = false;
   let scrollTimeout;
 
-  // Set initial state
+  // Set initial state - visible by default
   gsap.set(navbar, {
-    y: -100,
-    backgroundColor: 'rgba(255, 255, 255, 0)',
-    backdropFilter: 'blur(0px)',
+    y: 0,
+    backgroundColor: 'rgba(249, 249, 249, 0.95)',
+    backdropFilter: 'blur(10px)',
     position: 'fixed',
     top: 0,
     left: 0,
@@ -2761,7 +2761,7 @@ function initMobileNavbarScrollAnimation() {
       // Scrolling down - hide navbar
       gsap.to(navbar, {
         y: -100,
-        backgroundColor: 'rgba(255, 255, 255, 0)',
+        backgroundColor: 'rgba(249, 249, 249, 0)',
         backdropFilter: 'blur(0px)',
         duration: 0.3,
         ease: 'power2.out'
@@ -2770,7 +2770,7 @@ function initMobileNavbarScrollAnimation() {
       // Scrolling up or at top - show navbar
       gsap.to(navbar, {
         y: 0,
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backgroundColor: 'rgba(249, 249, 249, 0.95)',
         backdropFilter: 'blur(10px)',
         duration: 0.3,
         ease: 'power2.out'

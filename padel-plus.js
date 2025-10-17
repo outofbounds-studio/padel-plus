@@ -2717,3 +2717,105 @@ document.addEventListener('DOMContentLoaded', () => {
   initSideNavigationWipeEffect();
 });
 // === END SIDE NAVIGATION WIPE EFFECT ===
+
+// === MOBILE NAVBAR SCROLL ANIMATION ===
+function initMobileNavbarScrollAnimation() {
+  // Only run on mobile breakpoints
+  const isMobile = window.innerWidth <= 767;
+  if (!isMobile) return;
+
+  const navbar = document.querySelector('.header') || document.querySelector('header') || document.querySelector('.navbar');
+  if (!navbar) {
+    console.log('[Mobile Navbar] No header/navbar element found');
+    return;
+  }
+
+  let lastScrollY = window.scrollY;
+  let isScrolling = false;
+  let scrollTimeout;
+
+  // Set initial state
+  gsap.set(navbar, {
+    y: -100,
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+    backdropFilter: 'blur(0px)',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+  });
+
+  function handleScroll() {
+    const currentScrollY = window.scrollY;
+    const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
+    
+    // Clear existing timeout
+    clearTimeout(scrollTimeout);
+    
+    // Set scrolling state
+    isScrolling = true;
+    
+    if (scrollDirection === 'down' && currentScrollY > 100) {
+      // Scrolling down - hide navbar
+      gsap.to(navbar, {
+        y: -100,
+        backgroundColor: 'rgba(255, 255, 255, 0)',
+        backdropFilter: 'blur(0px)',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    } else if (scrollDirection === 'up' || currentScrollY <= 100) {
+      // Scrolling up or at top - show navbar
+      gsap.to(navbar, {
+        y: 0,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    }
+    
+    lastScrollY = currentScrollY;
+    
+    // Reset scrolling state after delay
+    scrollTimeout = setTimeout(() => {
+      isScrolling = false;
+    }, 150);
+  }
+
+  // Throttled scroll handler
+  let ticking = false;
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  // Add scroll listener
+  window.addEventListener('scroll', requestTick, { passive: true });
+  
+  // Handle resize to reinitialize if needed
+  window.addEventListener('resize', () => {
+    const newIsMobile = window.innerWidth <= 767;
+    if (newIsMobile !== isMobile) {
+      // Breakpoint changed, reinitialize
+      setTimeout(() => {
+        initMobileNavbarScrollAnimation();
+      }, 100);
+    }
+  });
+
+  console.log('[Mobile Navbar] Scroll animation initialized');
+}
+
+// Initialize Mobile Navbar Scroll Animation
+document.addEventListener('DOMContentLoaded', () => {
+  initMobileNavbarScrollAnimation();
+});
+// === END MOBILE NAVBAR SCROLL ANIMATION ===

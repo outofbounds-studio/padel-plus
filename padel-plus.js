@@ -30,6 +30,14 @@ function loadLenisCSS() {
   }
 }
 
+function initDynamicCurrentYear() {
+  const currentYear = new Date().getFullYear();
+  const currentYearElements = document.querySelectorAll('[data-current-year]');
+  currentYearElements.forEach(currentYearElement => {
+    currentYearElement.textContent = currentYear;
+  });
+}
+
 console.log('[Padel Plus] Before Promise.all for dependencies');
 
 Promise.all([
@@ -2819,3 +2827,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileNavbarScrollAnimation();
 });
 // === END MOBILE NAVBAR SCROLL ANIMATION ===
+
+// Initialize Dynamic Current Year
+document.addEventListener('DOMContentLoaded', () => {
+  initDynamicCurrentYear();
+});

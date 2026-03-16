@@ -121,20 +121,6 @@ Promise.all([
       console.log('[Padel Plus] MWG EFFECT 003 not found on this page');
     }
 
-    // MWG005 Debug
-    console.log('[Padel Plus] Checking for .mwg_effect005...');
-    const mwgEffect005Debug = document.querySelector('.mwg_effect005');
-    const pinHeight005 = document.querySelector('.mwg_effect005 .pin-height-005');
-    console.log('[Padel Plus] MWG005 pinHeight005:', pinHeight005);
-    const container005 = document.querySelector('.mwg_effect005 .container');
-    const words005 = document.querySelectorAll('.mwg_effect005 .word');
-    if (mwgEffect005Debug) {
-      console.log('[Padel Plus] MWG EFFECT 005 found, initializing...');
-      console.log('[Padel Plus] MWG005 elements:', { pinHeight005, container005, wordsCount: words005.length });
-    } else {
-      console.log('[Padel Plus] MWG EFFECT 005 not found on this page');
-    }
-
     // Dots grid debug
     console.log('[Padel Plus] Checking for [data-dots-container-init]...');
     const dotsContainers = document.querySelectorAll('[data-dots-container-init]');
@@ -743,98 +729,10 @@ Promise.all([
     }
     // === END MWG EFFECT 003 ===
 
-    // === MWG EFFECT 005 (Pin Height Words Animation) ===
-    // Check if MWG EFFECT 005 exists before running
-    const mwgEffect005 = document.querySelector(".mwg_effect005");
-    const mwgEffect005Section = mwgEffect005?.closest('.section');
-    if (mwgEffect005) {
-      console.log('[Padel Plus] MWG EFFECT 005 found, initializing...');
-      // INSTRUCTION: Ensure there is a spacer or the carousel section immediately after MWG005 in your HTML, e.g.:
-      // <section class="section mwg_effect005">...</section>
-      // <div class="mwg005-spacer" style="height: 100vh;"></div>
-      // <section class="swiper-section">...</section>
-      // Utility to wrap each word in a span
-      function wrapWordsInSpan(element) {
-        if (!element) return;
-        const text = element.textContent;
-        element.innerHTML = text
-          .split(' ')
-          .map(word => `<span class="word">${word}</span>`)
-          .join(' ');
-      }
-      gsap.to('.mwg_effect005 .scroll', {
-        autoAlpha:0,
-        duration:0.2,
-        scrollTrigger: {
-          trigger:'.mwg_effect005',
-          start:'top top',
-          end:'top top-=1',
-          toggleActions: "play none reverse none"
-        }
-      });
-      const paragraph005 = document.querySelector(".mwg_effect005 .paragraph");
-      if (paragraph005) {
-        wrapWordsInSpan(paragraph005);
-      }
-      const pinHeight005 = document.querySelector(".mwg_effect005 .pin-height-005");
-      const container005 = document.querySelector(".mwg_effect005 .container");
-      const words005 = document.querySelectorAll(".mwg_effect005 .word");
-      // Only create ScrollTrigger if all required elements exist
-      if (pinHeight005 && container005 && words005.length > 0) {
-        console.log('[Padel Plus] MWG EFFECT 005 elements found, creating ScrollTrigger...');
-        // MWG005: Pin, animate, finish, then unpin before carousel
-        gsap.to(words005, {
-          x: 0,
-          stagger: 0.02,
-          ease: 'power4.inOut',
-          scrollTrigger: {
-            trigger: pinHeight005,
-            start: 'top top',
-            endTrigger: '.mwg005-spacer', // Use the spacer as endTrigger
-            end: 'top top', // When MWG005 top hits spacer top
-            scrub: true,
-            pin: pinHeight005,
-            anticipatePin: 1,
-            id: 'mwg005-words',
-            markers: false,
-            onUpdate: (self) => {
-              console.log('[Padel Plus] MWG005 animation updating', self.progress);
-            },
-            onEnter: () => {
-              console.log('[Padel Plus] MWG005 onEnter');
-            },
-            onLeave: () => {
-              console.log('[Padel Plus] MWG005 onLeave (unpinning)');
-              gsap.to(pinHeight005, {
-                opacity: 0.8,
-                duration: 0.3,
-                ease: 'power2.out'
-              });
-            },
-            onEnterBack: () => {
-              console.log('[Padel Plus] MWG005 onEnterBack (re-pinning)');
-              gsap.to(pinHeight005, {
-                opacity: 1,
-                duration: 0.3,
-                ease: 'power2.out'
-              });
-            },
-            onLeaveBack: () => {
-              console.log('[Padel Plus] MWG005 onLeaveBack');
-            }
-          }
-        });
-      } else {
-        console.warn('[Padel Plus] MWG EFFECT 005: Missing required elements:', {
-          pinHeight005: !!pinHeight005,
-          container005: !!container005,
-          wordsCount: words005.length
-        });
-      }
-    } else {
-      console.log('[Padel Plus] MWG EFFECT 005 not found on this page');
-    }
-    // === END MWG EFFECT 005 ===
+    // === FORMER MWG EFFECT 005 SECTION ===
+    // Use the site's split heading animation instead: add data-split="heading"
+    // (and optionally data-split-reveal="lines" | "words" | "chars") to the heading element.
+    // Handled by the Masked Text Reveal block (SplitText) below.
 
     // === GLOWING INTERACTIVE DOTS GRID (Osmo) ===
     gsap.registerPlugin(InertiaPlugin);
@@ -1268,16 +1166,12 @@ Promise.all([
 
     // Output computed heights for debugging
     setTimeout(() => {
-      const eff005Section = document.querySelector('.mwg_effect005')?.closest('.section');
       const swiperSection = document.querySelector('.swiper-section');
       const eff003Section = document.querySelector('.mwg_effect003')?.closest('.section');
       const pinHeight003 = document.querySelector('.mwg_effect003 .pin-height');
-      const pinHeight005 = document.querySelector('.mwg_effect005 .pin-height');
-      console.log('[DEBUG HEIGHTS] .section (mwg_effect005):', eff005Section?.offsetHeight);
       console.log('[DEBUG HEIGHTS] .swiper-section:', swiperSection?.offsetHeight);
       console.log('[DEBUG HEIGHTS] .section (mwg_effect003):', eff003Section?.offsetHeight);
       console.log('[DEBUG HEIGHTS] .mwg_effect003 .pin-height:', pinHeight003?.offsetHeight);
-      console.log('[DEBUG HEIGHTS] .mwg_effect005 .pin-height:', pinHeight005?.offsetHeight);
     }, 1500);
 
     // At the end of runPadelPlusAnimationLogic, add:

@@ -1129,9 +1129,7 @@ Promise.all([
                   grabCursor: true,
                   keyboard: true,
                   speed: 500,
-                  mousewheel: {
-                    eventsTarget: "[carousel='component']"
-                  },
+                  mousewheel: false,
                   navigation: {
                     nextEl: nextEl,
                     prevEl: prevEl
@@ -1240,9 +1238,7 @@ Promise.all([
                   grabCursor: true,
                   keyboard: true,
                   speed: 500,
-                  mousewheel: {
-                    eventsTarget: "[carousel='component']"
-                  },
+                  mousewheel: false,
                   navigation: {
                     nextEl: nextEl[0],
                     prevEl: prevEl[0]

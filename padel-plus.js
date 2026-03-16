@@ -299,24 +299,28 @@ Promise.all([
     function setActiveCategory(category) {
       const courtsLink = document.querySelector('.courts-link');
       const canopiesLink = document.querySelector('.canopies-link');
-      if (!courtsLink || !canopiesLink) return;
+      const lightingLink = document.querySelector('.lighting-link');
+      const categoryLinks = [courtsLink, canopiesLink, lightingLink].filter(Boolean);
+      if (categoryLinks.length === 0) return;
 
-      // Remove .active from both, then add to the active one
-      courtsLink.classList.remove('active');
-      canopiesLink.classList.remove('active');
+      // Remove .active and set inactive opacity from all, then set active one
+      categoryLinks.forEach((link) => {
+        link.classList.remove('active');
+        link.style.opacity = '0.3';
+      });
 
-      if (category === 'courts') {
+      if (category === 'courts' && courtsLink) {
         courtsLink.style.opacity = '1';
-        canopiesLink.style.opacity = '0.3';
         courtsLink.classList.add('active');
         console.log('[Padel Plus] Courts active: plus symbol animated in, opacity 1');
-        console.log('[Padel Plus] Canopies inactive: opacity 0.3');
-      } else if (category === 'canopies') {
-        courtsLink.style.opacity = '0.3';
+      } else if (category === 'canopies' && canopiesLink) {
         canopiesLink.style.opacity = '1';
         canopiesLink.classList.add('active');
         console.log('[Padel Plus] Canopies active: plus symbol animated in, opacity 1');
-        console.log('[Padel Plus] Courts inactive: opacity 0.3');
+      } else if (category === 'lighting' && lightingLink) {
+        lightingLink.style.opacity = '1';
+        lightingLink.classList.add('active');
+        console.log('[Padel Plus] Lighting active: plus symbol animated in, opacity 1');
       }
     }
 
@@ -338,6 +342,16 @@ Promise.all([
         end: "bottom center",
         onEnter: () => setActiveCategory('canopies'),
         onEnterBack: () => setActiveCategory('canopies')
+      });
+    });
+    // Lighting slides
+    document.querySelectorAll('.slide[data-category="lighting"]').forEach(slide => {
+      ScrollTrigger.create({
+        trigger: slide,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => setActiveCategory('lighting'),
+        onEnterBack: () => setActiveCategory('lighting')
       });
     });
 

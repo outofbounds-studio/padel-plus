@@ -983,6 +983,8 @@ Promise.all([
               item.style.transform = `rotateY(${rotateAmount * index}deg) translateZ(${posTranslate})`;
             });
 
+            const rotateX = parseFloat(wrapEl.getAttribute('data-carousel-rotate-x')) || -4;
+
             console.log('[Padel Plus] 3D Carousel: Starting intro animation...');
             let introTl = gsap.timeline({
               scrollTrigger: {
@@ -996,7 +998,7 @@ Promise.all([
               }
             });
             introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
-            introTl.set(wrapEl, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4 }, "<");
+            introTl.set(wrapEl, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": rotateX }, "<");
             introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
 
             function swiperCode() {
@@ -1100,6 +1102,8 @@ Promise.all([
               $(this).css("transform", `rotateY(${rotateAmount * index}deg) translateZ(${posTranslate})`);
             });
 
+            const rotateX = parseFloat(wrapEl.attr('data-carousel-rotate-x')) || -4;
+
             let introTl = gsap.timeline({
               scrollTrigger: {
                 trigger: '.swiper-section',
@@ -1111,7 +1115,7 @@ Promise.all([
               }
             });
             introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
-            introTl.set(wrapEl, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4 }, "<");
+            introTl.set(wrapEl[0], { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": rotateX }, "<");
             introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
 
             function swiperCode() {

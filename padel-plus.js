@@ -1028,6 +1028,10 @@ Promise.all([
                   keyboard: true,
                   speed: 500,
                   mousewheel: false,
+                  autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false
+                  },
                   navigation: {
                     nextEl: nextEl,
                     prevEl: prevEl
@@ -1137,6 +1141,10 @@ Promise.all([
                   keyboard: true,
                   speed: 500,
                   mousewheel: false,
+                  autoplay: {
+                    delay: 4000,
+                    disableOnInteraction: false
+                  },
                   navigation: {
                     nextEl: nextEl[0],
                     prevEl: prevEl[0]

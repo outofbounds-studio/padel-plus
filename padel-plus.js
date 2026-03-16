@@ -1098,7 +1098,7 @@ Promise.all([
               }
             });
             introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
-            introTl.fromTo(wrapEl, { "--3d-carousel-rotate": 100, "--3d-carousel-rotate-x": -90 }, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4, duration: 4, ease: "power2.inOut" }, "<");
+            introTl.set(wrapEl, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4 }, "<");
             introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
 
             function swiperCode() {
@@ -1211,7 +1211,7 @@ Promise.all([
               }
             });
             introTl.to(wrapEl, { opacity: 1, duration: 0.3 });
-            introTl.fromTo(wrapEl, { "--3d-carousel-rotate": 100, "--3d-carousel-rotate-x": -90 }, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4, duration: 4, ease: "power2.inOut" }, "<");
+            introTl.set(wrapEl, { "--3d-carousel-rotate": 0, "--3d-carousel-rotate-x": -4 }, "<");
             introTl.to("[fade-up]", { opacity: 1 }, ">-0.3");
 
             function swiperCode() {
